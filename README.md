@@ -1,10 +1,5 @@
-# my-projects
-My GitHub projects
+#cyber-log-analyzer
 
-Welcome to my GitHub! This repository contains my coding projects.
+A Python-based cybersecurity project designed to analyze authentication logs, identify suspicious activity, and generate security alerts.
+This project is being developed as a practical way to learn Python, Object-Oriented Programming (OOP), Git, and cybersecurity concepts.
 
-## About Me
-I am learning and building things, even though, most of the time, they aren't useful.
-
-## Projects
--    
