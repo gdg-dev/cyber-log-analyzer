@@ -86,7 +86,8 @@ class User:
 
 
 
-    passwords = [{"name": "Admin", "pass": "123"}]
+    passwords = [{"name": "Admin", "pass": "123"},
+                 {"name": "user1", "pass": "user"}]
 
 
     def __init__(self, name, age, ip_adress):
@@ -105,21 +106,30 @@ class User:
 
 
     def log_in(self, password_given):
-        if self.passwords[self.name] == password_given:
-            return True
-        else:
-            return False
+        #print(password_given)
+        for user in self.passwords:
+            if user["name"] == self.name:
+                #print(user)
+                #print(self.name)
+                if user['pass'] == password_given and user['name'] == self.name:
+                    return True
+                else:
+                    return False
 
 juan = User("juan", 42, "1.1.1.1")
-print(juan)
+#print(juan)
 juan.create_password("abc")
 
 paulo = User("Paulo", 47, "2.2.2.2")
-print(paulo)
+#print(paulo)
 print(paulo.create_password("my_pass"))
 
 
 print(paulo.log_in("my_pass"))
 print(paulo.log_in("123"))
+
+admin = User("Admin", 21, "0.0.0.0")
+
+print(admin.log_in("123"))
 
 
