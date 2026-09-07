@@ -87,7 +87,8 @@ class User:
 
 
     passwords = [{"name": "Admin", "pass": "123"},
-                 {"name": "user1", "pass": "user"}]
+                 {"name": "user1", "pass": "user"},
+                ]
 
 
     def __init__(self, name, age, ip_adress):
@@ -132,4 +133,11 @@ admin = User("Admin", 21, "0.0.0.0")
 
 print(admin.log_in("123"))
 
+
+
+func = admin.log_in
+func_2 = func
+
+print(func("123"))
+print(func_2("admin"))
 
