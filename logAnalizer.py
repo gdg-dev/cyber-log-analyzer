@@ -105,6 +105,19 @@ class User:
         self.passwords.append({"name": self.name, "pass": password})
         return self.passwords
 
+    def remove_user(self, username:str):
+
+        for user in self.passwords:
+            print(username)
+            print(user["name"])
+            if username == user['name']:
+                self.passwords.remove(user)
+            else:
+                print(f"the is no user called {username} in our data")
+
+            return self.passwords 
+
+
 
     def log_in(self, password_given):
         #print(password_given)
@@ -116,6 +129,9 @@ class User:
                     return True
                 else:
                     return False
+
+
+
 
 juan = User("juan", 42, "1.1.1.1")
 #print(juan)
@@ -134,10 +150,13 @@ admin = User("Admin", 21, "0.0.0.0")
 print(admin.log_in("123"))
 
 
-
+#alias 
 func = admin.log_in
 func_2 = func
 
 print(func("123"))
 print(func_2("admin"))
 
+
+
+print(admin.remove_user("Admin"))
