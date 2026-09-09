@@ -106,16 +106,16 @@ class User:
         return self.passwords
 
     def remove_user(self, username:str):
+        
+        for person in self.passwords:
+            
+            if username == person['name']:
+                self.passwords.remove(person)
+                return self.passwords
 
-        for user in self.passwords:
-            print(username)
-            print(user["name"])
-            if username == user['name']:
-                self.passwords.remove(user)
-            else:
-                print(f"the is no user called {username} in our data")
+            
 
-            return self.passwords 
+            
 
 
 
@@ -158,5 +158,5 @@ print(func("123"))
 print(func_2("admin"))
 
 
-
+print(admin.remove_user("Paulo"))
 print(admin.remove_user("Admin"))
