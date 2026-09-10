@@ -86,10 +86,9 @@ class User:
 
 
 
-    passwords = [{"name": "Admin", "pass": "123"},
-                 {"name": "user1", "pass": "user"},
-                ]
+    passwords = []
 
+    adimin_pass = "Admin.Pass"
 
     def __init__(self, name, age, ip_adress):
         self.name = name
@@ -105,19 +104,18 @@ class User:
         self.passwords.append({"name": self.name, "pass": password})
         return self.passwords
 
-    def remove_user(self, username:str):
-        
-        for person in self.passwords:
-            
-            if username == person['name']:
-                self.passwords.remove(person)
-                return self.passwords
+    def remove_user(self, username:str, pass_given: str):
+        if pass_given == self.adimin_pass:
 
-            
+            for person in self.passwords:
 
-            
-
-
+                
+                if username == person['name']:
+                    self.passwords.remove(person)
+                    return self.passwords
+        else:
+            return f"The password given is wrong."
+    
 
     def log_in(self, password_given):
         #print(password_given)
@@ -132,31 +130,30 @@ class User:
 
 
 
-
-juan = User("juan", 42, "1.1.1.1")
-#print(juan)
-juan.create_password("abc")
-
-paulo = User("Paulo", 47, "2.2.2.2")
-#print(paulo)
-print(paulo.create_password("my_pass"))
+    
 
 
-print(paulo.log_in("my_pass"))
-print(paulo.log_in("123"))
-
-admin = User("Admin", 21, "0.0.0.0")
-
-print(admin.log_in("123"))
-
-
+"""
 #alias 
 func = admin.log_in
 func_2 = func
 
 print(func("123"))
 print(func_2("admin"))
+"""
 
 
-print(admin.remove_user("Paulo"))
-print(admin.remove_user("Admin"))
+user1 = User("john", 34, "1.1.1.1")
+user2 = User("Dani", 42, "2.2.2.2")
+user3 = User("Abel", 63, "3.3.3.3")
+user4 = User("jamon", 32, "4.4.4.4")
+
+user1.create_password("12345")
+user2.create_password("abcde")
+user3.create_password("sun_123")
+
+
+print(user1.remove_user("Dani", user1.adimin_pass)) 
+print(user2.log_in("abcde"))
+print(user3.log_in("12345"))
+print(user4.log_in(user4.adimin_pass))
