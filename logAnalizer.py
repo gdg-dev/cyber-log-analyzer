@@ -129,6 +129,14 @@ class User:
                     return False
 
 
+    def show_passwords(self, adminpass):
+        if adminpass == self.adimin_pass:
+            for user in self.passwords:
+                
+                print(f"{user['name']} -> {user['pass']}")
+
+        else:
+            return f"the password given is wrong"
 
     
 
@@ -157,3 +165,7 @@ print(user1.remove_user("Dani", user1.adimin_pass))
 print(user2.log_in("abcde"))
 print(user3.log_in("12345"))
 print(user4.log_in(user4.adimin_pass))
+
+
+
+print(user2.show_passwords("Admin.Pass"))
