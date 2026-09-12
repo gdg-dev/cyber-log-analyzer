@@ -151,21 +151,25 @@ print(func_2("admin"))
 """
 
 
-user1 = User("john", 34, "1.1.1.1")
-user2 = User("Dani", 42, "2.2.2.2")
-user3 = User("Abel", 63, "3.3.3.3")
+user1 = User("john", 34,  "1.1.1.1")
+user2 = User("Dani", 42,  "2.2.2.2")
+user3 = User("Abel", 63,  "3.3.3.3")
 user4 = User("jamon", 32, "4.4.4.4")
+user5 = User("joel", 55,  "5.5.5.5")
+
+
 
 user1.create_password("12345")
 user2.create_password("abcde")
 user3.create_password("sun_123")
+user4.create_password("laptop")
+user5.create_password("123")
 
-
-print(user1.remove_user("Dani", user1.adimin_pass)) 
+#print(user1.remove_user("Dani", user1.adimin_pass)) 
 print(user2.log_in("abcde"))
 print(user3.log_in("12345"))
-print(user4.log_in(user4.adimin_pass))
+print(user4.log_in("laptop"))
 
 
 
-print(user2.show_passwords("Admin.Pass"))
+print(user5.show_passwords("Admin.Pass"))
