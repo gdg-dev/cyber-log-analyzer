@@ -150,7 +150,7 @@ print(func("123"))
 print(func_2("admin"))
 """
 
-
+"""
 user1 = User("john", 34,  "1.1.1.1")
 user2 = User("Dani", 42,  "2.2.2.2")
 user3 = User("Abel", 63,  "3.3.3.3")
@@ -172,4 +172,10 @@ print(user4.log_in("laptop"))
 
 
 
-print(user5.show_passwords("Admin.Pass"))
+print(user5.show_passwords("Admin.Pass"))"""
+
+def func(a,b,*args):
+    print(a,b,*args)
+    print(*args)
+
+func(12,23,345,54)
