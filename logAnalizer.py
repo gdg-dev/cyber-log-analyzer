@@ -174,8 +174,8 @@ print(user4.log_in("laptop"))
 
 print(user5.show_passwords("Admin.Pass"))"""
 
-def func(a,b,*args):
-    print(a,b,*args)
-    print(*args)
+def printer(a, b, /, c, d, e="e", f="f", *, g, h, i, **kwargs):
+    print(a, b, c, d, e, f, g, h, i, kwargs)   
 
-func(12,23,345,54)
+
+printer(1, 2, 3, 4, 5, 6, 10, h=11, i=12, x="x", y="y")   
