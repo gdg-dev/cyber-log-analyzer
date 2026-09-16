@@ -174,8 +174,12 @@ print(user4.log_in("laptop"))
 
 print(user5.show_passwords("Admin.Pass"))"""
 
-def printer(a, b, /, c, d, e="e", f="f", *, g, h, i, **kwargs):
-    print(a, b, c, d, e, f, g, h, i, kwargs)   
 
+def get_num(num):
+    #this function just gets a number
+    print(num)
+    return lambda a : a*num
 
-printer(1, 2, 3, 4, 5, 6, 10, h=11, i=12, x="x", y="y")   
+double = get_num(6)
+
+print(double)
