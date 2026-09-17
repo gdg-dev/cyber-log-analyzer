@@ -175,11 +175,6 @@ print(user4.log_in("laptop"))
 print(user5.show_passwords("Admin.Pass"))"""
 
 
-def get_num(num):
-    #this function just gets a number
-    print(num)
-    return lambda a : a*num
+a = lambda a,b,*args: a + b + args
 
-double = get_num(6)
-
-print(double)
+print(a(12,1,1,1,1,1,1))
