@@ -174,7 +174,41 @@ print(user4.log_in("laptop"))
 
 print(user5.show_passwords("Admin.Pass"))"""
 
+nums = [1,2,3,4,5,6,7,8,9]
 
-a = lambda a,b,*args: a + b + args
+filter_nums = list(filter(lambda x : x %2 == 0, nums))
 
-print(a(12,1,1,1,1,1,1))
+duble_nums = list(map(lambda num: num *2 , nums))
+
+
+people = [("Paul", 23),("javier", 53), ("hernesto", 63) ]
+
+order_by_age = sorted(people, key=lambda x : x[1])
+
+
+print(order_by_age)
+
+print(filter_nums)
+print(duble_nums)
+
+
+
+
+#exercise
+
+add_15 = lambda x: x + 15
+
+multiplier = lambda x, y : x*y
+
+words =['php', 'car', 'Python', 'abcd', 'Java', 'aaa']
+
+polidrome = list(filter(lambda x : (x == "".join(reversed(x))), words))
+print(polidrome)
+
+
+list1 = [1,2,3,4]
+list2 = [5,6,7,8]
+
+add_lists = list(map(lambda x, y: x + y, list1, list2))
+
+print(add_lists)
