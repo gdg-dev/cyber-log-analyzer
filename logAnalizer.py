@@ -212,3 +212,36 @@ list2 = [5,6,7,8]
 add_lists = list(map(lambda x, y: x + y, list1, list2))
 
 print(add_lists)
+
+matrix = [
+    [1,2,3],
+    [4,5,6],
+    [7,8,9],
+    ]
+
+for i in matrix:
+    for j in i:
+        print(j)
+
+a = [
+    [ 1, 2],
+    [ 3, 4]
+]
+b = [
+    [-1, 0],
+    [ 2,-2]
+]
+#matrix multiplication
+
+for i in range(len(a)):
+    print(f"i = {i}")
+    for j in range(len(b[0])):
+        print(f"j = {j}")
+        for k in range(len(b)):
+            print(f"k = {k}")
+           
+
+
+
+
+print(b[0])
