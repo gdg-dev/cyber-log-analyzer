@@ -28,6 +28,8 @@ def show_category(category):
     print(f"\nTotal: €{total:.2f}")
 
 
+budget = 0
+
 def menu():
     #this function works as a menu for the user
     print(f"""
@@ -36,19 +38,51 @@ def menu():
 1- Add Expenses;
 2- Show Expenses;
 3- Show Category;
-4- Exit
+4- Set Budget;
+5- Show Budget;
+6- Exit
 """)
+
 
     user_answar = input("what is your choice: ")
 
 
     if user_answar == "1":
-        activity = input("\nType the activity of your expense: ")
-        value = int(input("\nType the value of your expense: "))
-        category = input("\nType the category of you expense: ")
-        add_expense(activity, value, category)
+        try:
+
+            activity = input("\nType the activity of your expense: ").lower()
+            value = float(input("\nType the value of your expense: "))
+            category = input("\nType the category of you expense: ").lower()
+            add_expense(activity, value, category)
+
+        except ValueError as e:
+            print(f"\nError: [{e}] try again later")
+            
 
 
+    elif user_answar == "2":
+        show_expenses()
+
+    elif user_answar == "3":
+        category = input("\nType the category of your expense: ").lower()
+        show_category(category)
+
+    elif user_answar == "4":
+        try:
+            budget = float(input("what is the new budget: "))
+
+        except ValueError as e:
+            print("Error: [{e}] please try again later")
+        
+        
+    elif user_answar == "5":
+        print(f"\nTotal budget: {budget}") 
+    elif user_answar == "6":
+        exit()
+
+    else:
+        print("Invalid choice please try a number from 1 to 4")
 
 
-menu()
+while True:
+    menu()
