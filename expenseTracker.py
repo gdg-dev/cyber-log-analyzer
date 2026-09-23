@@ -1,5 +1,7 @@
 #This is my project to track the expenses of the user. 
 
+budget = 0
+
 expenses = [
     {"activity": "coffee", "value": 1.20, "category": "food"},
 
@@ -27,10 +29,20 @@ def show_category(category):
             total += i['value']
     print(f"\nTotal: €{total:.2f}")
 
+def set_budget(value):
+    #this function changes the value of budget evendough using global is not the bette way
+    global budget
+    budget = value
 
-budget = 0
+def show_budget():
+    total_spent = 0
+    for i in expenses:
+        total_spent += i['value'] 
 
-def menu():
+    remaining = budget - total_spent
+    return total_spent, remaining
+
+def menu(budget=0):
     #this function works as a menu for the user
     print(f"""
 --Menu--
@@ -43,7 +55,8 @@ def menu():
 6- Exit
 """)
 
-
+    
+  
     user_answar = input("what is your choice: ")
 
 
@@ -70,13 +83,19 @@ def menu():
     elif user_answar == "4":
         try:
             budget = float(input("what is the new budget: "))
+            
 
         except ValueError as e:
             print("Error: [{e}] please try again later")
-        
+        else:    
+            set_budget(budget)
         
     elif user_answar == "5":
-        print(f"\nTotal budget: {budget}") 
+        spent , remaining = show_budget()
+        print(f"\nTotal budget: {budget:.2f}") 
+        print(f"Total spent: {spent:.2f}")
+        print(f"Total remaining: {remaining:.2f}")
+        
     elif user_answar == "6":
         exit()
 
@@ -86,3 +105,4 @@ def menu():
 
 while True:
     menu()
+
