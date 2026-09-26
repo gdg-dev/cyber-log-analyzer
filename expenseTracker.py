@@ -1,6 +1,14 @@
 #This is my project to track the expenses of the user. 
 from datetime import datetime
 
+date = datetime.now()
+print(date.strftime("%m"))
+print(date.strftime("%x"[0]))
+
+
+
+
+
 budget = 0
 
 expenses = []
@@ -33,14 +41,21 @@ def set_budget(value):
 
 
 
-def caclulate_total():
+def calulate_total(date=""):
     #this function calculates the money spent and remaing from the user
     total_spent = 0
     for i in expenses:
-        total_spent += i['value']
+        print(date)
+        print("now")
+        print(i['date'])
+        if date == "":
+            total_spent += i['value']
+
+        elif i['date'] == date:
+            total_spent += i['value']
 
     remainig = budget - total_spent
-    return total_spent, remainig, budget
+    return total_spent, remainig
 
 
 def menu():
@@ -57,7 +72,7 @@ def menu():
 """)
 
     
-  
+    print(budget)
     user_answar = input("what is your choice: ")
 
     if user_answar == "1":
@@ -75,7 +90,7 @@ def menu():
 
     elif user_answar == "2":
         show_expenses()
-        spent, remaining, budget = caclulate_total()
+        spent, remaining = calulate_total("12")
         print(f"\nTotal spent [€{spent:.2f}]")
 
     elif user_answar == "3":
@@ -94,7 +109,8 @@ def menu():
             
         
     elif user_answar == "5":
-        spent , remaining, budget = caclulate_total()
+        print(budget)
+        spent , remaining = calulate_total()
         print(f"\nTotal budget: {budget:.2f}") 
         print(f"Total spent: {spent:.2f}")
         print(f"Total remaining: {remaining:.2f}")
@@ -108,6 +124,6 @@ def menu():
 
 while True:
     menu()
-    print(expenses)
+   
 
 
