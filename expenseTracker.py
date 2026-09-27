@@ -1,28 +1,28 @@
 #This is my project to track the expenses of the user. 
 from datetime import datetime
 
-date = datetime.now()
-print(date.strftime("%m"))
-print(date.strftime("%x"[0]))
-
-
-
 
 
 budget = 0
 
 expenses = []
 
+
+class InvalidDate(Exception):
+    """This error just refers to the valid dates (1-12) """
+
 def add_expense(activity, value, category):
     #this function add's a expense to expenses with a activity and a value given
     date = datetime.now()
 
-    expenses.append({"activity": activity, "value": value, "category": category, "date": date.strftime("%x")})   #<-- does not need to return because append already returns None
+    expenses.append({"activity": activity, "value": value, "category": category, "date": date.strftime("%d/%m/%Y")})   #<-- does not need to return because append already returns None
 
-def show_expenses():
+def show_expenses(i):
     #this function shows all the expenses in the expense list and sum all expenses
-    for i in expenses:
-        print(f"{i['activity']} --> €{i['value']:.2f}[{i['category'].lower()}] {i['date']}")
+
+    print(f"{i['activity']} --> €{i['value']:.2f}[{i['category'].lower()}] {i['date']}")
+    
+        
 
 
 def show_category(category):
@@ -30,7 +30,7 @@ def show_category(category):
     total = 0
     for i in expenses:
         if i['category'] == category:
-            print(f"{i['activity']} --> €{i['value']:.2f}[{i['category'].lower()}]")
+            print(f"{i['activity']} --> €{i['value']:.2f}[{i['category'].lower()}] {i['date']}")
             total += i['value']
     print(f"\nTotal: €{total:.2f}")
 
@@ -42,17 +42,22 @@ def set_budget(value):
 
 
 def calulate_total(date=""):
-    #this function calculates the money spent and remaing from the user
+    #this function calculates the money spent and remaing from the user and also calls the show_expenses function to show only the expenses of the month choosen
     total_spent = 0
+    date_format = "%m/%d/%y"
     for i in expenses:
-        print(date)
-        print("now")
-        print(i['date'])
+        date_to_str = datetime.strptime(i['date'], date_format)
+        month_date = date_to_str.month
+
+
         if date == "":
             total_spent += i['value']
+            show_expenses(i)
+            
 
-        elif i['date'] == date:
+        elif date == str(month_date):
             total_spent += i['value']
+            show_expenses(i)
 
     remainig = budget - total_spent
     return total_spent, remainig
@@ -80,7 +85,7 @@ def menu():
 
             activity = input("\nType the activity of your expense: ").lower()
             value = float(input("\nType the value of your expense: "))
-            category = input("\nType the category of you expense: ").lower()
+            category = input("\nType the category of your expense: ").lower()
             add_expense(activity, value, category)
 
         except ValueError as e:
@@ -89,17 +94,35 @@ def menu():
 
 
     elif user_answar == "2":
-        show_expenses()
-        spent, remaining = calulate_total("12")
-        print(f"\nTotal spent [€{spent:.2f}]")
+        valid_dates = ["1","2","3","4","5","6","7","8","9","10","11","12", ""]
+        try:
+            given_date = input("\nInsert the number of the month wanted from 1 to 12. (if you want all expanses just press enter with no text): ")
+            if not given_date in valid_dates:
+                raise InvalidDate
+        
+        except InvalidDate as e:
+            print("\nThe date given is not correct please try something from 1-12")
 
+        else:
+            spent, remaining = calulate_total(given_date)
+                
+            if spent == 0:
+                print("\nNo expenses")
+
+
+            elif spent > budget:
+                print("\nYou have exceeded the budget! Be carefull")
+
+            print(f"\nTotal spent [€{spent:.2f}]") 
+
+        
     elif user_answar == "3":
         category = input("\nType the category of your expense: ").lower()
         show_category(category)
 
     elif user_answar == "4":
         try:
-            budget_given = float(input("what is the new budget: "))
+            budget_given = float(input("\nWhat is the new budget: "))
             
 
         except ValueError as e:
