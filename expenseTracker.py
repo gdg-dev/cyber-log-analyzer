@@ -11,29 +11,24 @@ expenses = []
 class InvalidDate(Exception):
     """This error just refers to the valid dates (1-12) """
 
+
+class InvalidCategory(Exception):
+    """This error is created to the invalid categories"""
+
+
 def add_expense(activity, value, category):
     #this function add's a expense to expenses with a activity and a value given
     date = datetime.now()
 
     expenses.append({"activity": activity, "value": value, "category": category, "date": date.strftime("%d/%m/%Y")})   #<-- does not need to return because append already returns None
 
-def show_expenses(i):
-    #this function shows all the expenses in the expense list and sum all expenses
+def show_expenses(filtered_expenses_dict):
 
-    print(f"{i['activity']} --> €{i['value']:.2f}[{i['category'].lower()}] {i['date']}")
+    #this function shows the expenses from the given dictionary
+    for i in filtered_expenses_dict:
+        print(f"{i['activity']} --> €{i['value']:.2f}[{i['category'].lower()}] {i['date']}")
     
         
-
-
-def show_category(category):
-    #this function prints the expenses of a specific category
-    total = 0
-    for i in expenses:
-        if i['category'] == category:
-            print(f"{i['activity']} --> €{i['value']:.2f}[{i['category'].lower()}] {i['date']}")
-            total += i['value']
-    print(f"\nTotal: €{total:.2f}")
-
 def set_budget(value):
     #this function changes the value of budget evendough using global is not the bette way
     global budget
@@ -41,27 +36,40 @@ def set_budget(value):
 
 
 
-def calulate_total(date=""):
+def calulate_total(filtered_expenses_dict):
     #this function calculates the money spent and remaing from the user and also calls the show_expenses function to show only the expenses of the month choosen
     total_spent = 0
-    date_format = "%m/%d/%y"
-    for i in expenses:
-        date_to_str = datetime.strptime(i['date'], date_format)
-        month_date = date_to_str.month
-
-
-        if date == "":
-            total_spent += i['value']
-            show_expenses(i)
-            
-
-        elif date == str(month_date):
-            total_spent += i['value']
-            show_expenses(i)
+    
+    for i in filtered_expenses_dict:
+        total_spent += i['value']
 
     remainig = budget - total_spent
     return total_spent, remainig
 
+def filter_expenses(given_month, category):
+        #this function filters the expenses by mont and/or category
+        filtered_expenses = []
+
+        date_formate = "%d/%m/%Y"
+        for expense in expenses:
+            date_int = datetime.strptime(expense['date'], date_formate)
+            month = date_int.month
+
+
+            if given_month == "" and category == "":
+                filtered_expenses.append(expense)
+
+            elif given_month == "" and category == expense['category']:
+                filtered_expenses.append(expense)
+
+            elif given_month == str(month) and category == "":
+                filtered_expenses.append(expense)
+
+            elif given_month == str(month) and category == expense['category']:   
+                filtered_expenses.append(expense)
+
+
+        return filtered_expenses
 
 def menu():
     #this function works as a menu for the user
@@ -100,11 +108,15 @@ def menu():
             if not given_date in valid_dates:
                 raise InvalidDate
         
-        except InvalidDate as e:
+        except InvalidDate:
             print("\nThe date given is not correct please try something from 1-12")
 
         else:
-            spent, remaining = calulate_total(given_date)
+            expenses_by_date = filter_expenses(given_date, "")
+            spent, remaining = calulate_total(expenses_by_date)
+            show_expenses(expenses_by_date)
+            print(f"n\Total spent ->{spent},Remaining {remaining}")
+
                 
             if spent == 0:
                 print("\nNo expenses")
@@ -117,8 +129,24 @@ def menu():
 
         
     elif user_answar == "3":
-        category = input("\nType the category of your expense: ").lower()
-        show_category(category)
+        valid_category = []
+        for i in expenses:
+            valid_category.append(i['category'])
+
+        try:
+
+            category = input("\nType the category of your expense: ").lower()
+            if category not in valid_category:
+                raise InvalidCategory
+            
+        except InvalidCategory:
+            print("The given category is incorrect please try again later")
+
+        else:
+            expenses_by_category = filter_expenses("", category)
+            spent, remaining = calulate_total(expenses_by_category)
+            show_expenses(expenses_by_date)
+            print(f"n\Total spent ->{spent},Remaining {remaining}")
 
     elif user_answar == "4":
         try:
