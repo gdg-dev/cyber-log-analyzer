@@ -36,7 +36,7 @@ def set_budget(value):
 
 
 
-def calulate_total(filtered_expenses_dict):
+def calculate_total(filtered_expenses_dict):
     #this function calculates the money spent and remaing from the user and also calls the show_expenses function to show only the expenses of the month choosen
     total_spent = 0
     
@@ -48,7 +48,7 @@ def calulate_total(filtered_expenses_dict):
 
 def filter_expenses(given_month, category):
         #this function filters the expenses by mont and/or category
-        filtered_expenses = []
+        filtered_expenses = expenses.copy()
 
         date_formate = "%d/%m/%Y"
         for expense in expenses:
@@ -56,7 +56,26 @@ def filter_expenses(given_month, category):
             month = date_int.month
 
 
-            if given_month == "" and category == "":
+            if given_month:
+                if given_month == str(month):
+                    pass
+
+                else:
+                    filtered_expenses.remove(expense)
+
+            if category:
+                if category == expense['category']:
+                    pass
+
+                else:
+                    filtered_expenses.remove(expense)
+
+            else:
+
+                return filtered_expenses
+"""
+
+            if given_month == str(month) and category == expense['category']:   
                 filtered_expenses.append(expense)
 
             elif given_month == "" and category == expense['category']:
@@ -65,11 +84,12 @@ def filter_expenses(given_month, category):
             elif given_month == str(month) and category == "":
                 filtered_expenses.append(expense)
 
-            elif given_month == str(month) and category == expense['category']:   
+            else:
                 filtered_expenses.append(expense)
+           
 
 
-        return filtered_expenses
+        return filtered_expenses"""
 
 def menu():
     #this function works as a menu for the user
@@ -113,9 +133,9 @@ def menu():
 
         else:
             expenses_by_date = filter_expenses(given_date, "")
-            spent, remaining = calulate_total(expenses_by_date)
+            spent, remaining = calculate_total(expenses_by_date)
             show_expenses(expenses_by_date)
-            print(f"n\Total spent ->{spent},Remaining {remaining}")
+            
 
                 
             if spent == 0:
@@ -140,13 +160,13 @@ def menu():
                 raise InvalidCategory
             
         except InvalidCategory:
-            print("The given category is incorrect please try again later")
+            print("\nThe given category is incorrect please try again later")
 
         else:
             expenses_by_category = filter_expenses("", category)
-            spent, remaining = calulate_total(expenses_by_category)
-            show_expenses(expenses_by_date)
-            print(f"n\Total spent ->{spent},Remaining {remaining}")
+            spent, remaining = calculate_total(expenses_by_category)
+            show_expenses(expenses_by_category)
+            print(f"\nTotal spent ->€{spent:.2f},Remaining €{remaining:.2f}")
 
     elif user_answar == "4":
         try:
@@ -161,7 +181,7 @@ def menu():
         
     elif user_answar == "5":
         print(budget)
-        spent , remaining = calulate_total()
+        spent , remaining = calculate_total()
         print(f"\nTotal budget: {budget:.2f}") 
         print(f"Total spent: {spent:.2f}")
         print(f"Total remaining: {remaining:.2f}")
