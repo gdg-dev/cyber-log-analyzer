@@ -48,7 +48,7 @@ def calculate_total(filtered_expenses_dict):
 
 def filter_expenses(given_month, category):
         #this function filters the expenses by mont and/or category
-        filtered_expenses = expenses.copy()
+        filtered_expenses = []
 
         date_formate = "%d/%m/%Y"
         for expense in expenses:
@@ -58,21 +58,26 @@ def filter_expenses(given_month, category):
 
             if given_month:
                 if given_month == str(month):
-                    pass
+                    filtered_expenses.append(expense)
 
                 else:
-                    filtered_expenses.remove(expense)
+                    continue  #since the given month is wrong we can just ignore it
+            else:
+                filtered_expenses.append(expense)
 
             if category:
                 if category == expense['category']:
                     pass
+                    
 
                 else:
                     filtered_expenses.remove(expense)
-
             else:
+                filtered_expenses.append(expense)
+           
 
-                return filtered_expenses
+        return filtered_expenses
+            
 """
 
             if given_month == str(month) and category == expense['category']:   
@@ -127,12 +132,14 @@ def menu():
             given_date = input("\nInsert the number of the month wanted from 1 to 12. (if you want all expanses just press enter with no text): ")
             if not given_date in valid_dates:
                 raise InvalidDate
-        
+
+            
+
         except InvalidDate:
             print("\nThe date given is not correct please try something from 1-12")
 
         else:
-            expenses_by_date = filter_expenses(given_date, "")
+            expenses_by_date = filter_expenses(given_date, "sport")
             spent, remaining = calculate_total(expenses_by_date)
             show_expenses(expenses_by_date)
             
