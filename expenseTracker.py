@@ -43,8 +43,8 @@ def calculate_total(filtered_expenses_dict):
     for i in filtered_expenses_dict:
         total_spent += i['value']
 
-    remainig = budget - total_spent
-    return total_spent, remainig
+    remaining = budget - total_spent
+    return total_spent, remaining
 
 def filter_expenses(given_month, category):
         #this function filters the expenses by mont and/or category
@@ -52,49 +52,39 @@ def filter_expenses(given_month, category):
 
         date_formate = "%d/%m/%Y"
         for expense in expenses:
+            #bool_month = False
+            #bool_category = False
             date_int = datetime.strptime(expense['date'], date_formate)
             month = date_int.month
 
 
             if given_month:
                 if given_month == str(month):
-                    filtered_expenses.append(expense)
+                    bool_month = True
 
                 else:
                     continue  #since the given month is wrong we can just ignore it
             else:
-                filtered_expenses.append(expense)
+                bool_month = True
 
             if category:
                 if category == expense['category']:
-                    pass
+                    bool_category = True
                     
 
                 else:
-                    filtered_expenses.remove(expense)
+                    continue
+
             else:
-                filtered_expenses.append(expense)
+                bool_category = True
            
+            if bool_month and bool_category:
+                filtered_expenses.append(expense)
+
 
         return filtered_expenses
             
-"""
 
-            if given_month == str(month) and category == expense['category']:   
-                filtered_expenses.append(expense)
-
-            elif given_month == "" and category == expense['category']:
-                filtered_expenses.append(expense)
-
-            elif given_month == str(month) and category == "":
-                filtered_expenses.append(expense)
-
-            else:
-                filtered_expenses.append(expense)
-           
-
-
-        return filtered_expenses"""
 
 def menu():
     #this function works as a menu for the user
@@ -199,9 +189,29 @@ def menu():
     else:
         print("Invalid choice please try a number from 1 to 6")
 
-
+"""
 while True:
     menu()
    
+"""
+expenses = [
+    {"activity": "gym", "value": 50, "category": "sport", "date": "01/09/2024"},
+    {"activity": "movie", "value": 15, "category": "entertainment", "date": "02/01/2024"},
+    {"activity": "restaurant", "value": 30, "category": "food", "date": "03/01/2024"},
+    {"activity": "concert", "value": 100, "category": "entertainment", "date": "04/01/2024"},
+    {"activity": "groceries", "value": 80, "category": "food", "date": "05/01/2024"},
+    {"activity": "yoga class", "value": 20, "category": "sport", "date": "06/01/2024"},
+    {"activity": "museum visit", "value": 25, "category": "entertainment", "date": "07/01/2024"},
+    {"activity": "coffee shop", "value": 10, "category": "food", "date": "08/09/2024"},
+    {"activity": "swimming pool", "value": 15, "category": "sport", "date": "09/01/2024"},
+    {"activity": "theater play", "value": 40, "category": "entertainment", "date": "10/01/2024"},
+
+]
+
+#filter_expenses("", "sport")
+filtered_expenses = filter_expenses("9", "")
+for i in filtered_expenses:
+    print(i)
+
 
 
