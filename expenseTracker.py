@@ -2,7 +2,6 @@
 from datetime import datetime
 
 
-
 budget = 0
 
 expenses = []
@@ -52,36 +51,30 @@ def filter_expenses(given_month, category):
 
         date_formate = "%d/%m/%Y"
         for expense in expenses:
-            #bool_month = False
-            #bool_category = False
             date_int = datetime.strptime(expense['date'], date_formate)
             month = date_int.month
 
 
-            if given_month:
-                if given_month == str(month):
-                    bool_month = True
-
-                else:
-                    continue  #since the given month is wrong we can just ignore it
-            else:
-                bool_month = True
-
-            if category:
-                if category == expense['category']:
-                    bool_category = True
-                    
-
+            if not given_month or given_month == str(month):
+                if not category or category == expense['category']:
+                    filtered_expenses.append(expense)
+                                   
+               
                 else:
                     continue
 
             else:
-                bool_category = True
+                continue  #since the given month is wrong we can just ignore it
+        
+
            
-            if bool_month and bool_category:
-                filtered_expenses.append(expense)
 
+            
+           
+                
 
+           
+            
         return filtered_expenses
             
 
@@ -209,7 +202,7 @@ expenses = [
 ]
 
 #filter_expenses("", "sport")
-filtered_expenses = filter_expenses("9", "")
+filtered_expenses = filter_expenses("", "food")
 for i in filtered_expenses:
     print(i)
 
