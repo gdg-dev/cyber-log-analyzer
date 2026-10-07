@@ -1,10 +1,29 @@
 #This is my project to track the expenses of the user. 
 from datetime import datetime
+import json
+
 
 
 budget = 0
 
 expenses = []
+
+
+def open_data():
+    with open("expenses_data.json", "r") as file:
+        x = json.load(file)
+     
+    return x
+def create_data(data):
+    print(data)
+    with open("expenses_data.json", "w") as file:
+        x = json.dump(data, file, indent=4)
+
+
+
+
+
+   
 
 
 class InvalidDate(Exception):
@@ -56,25 +75,25 @@ def filter_expenses(given_month, category):
 
 
             if not given_month or given_month == str(month):
-                if not category or category == expense['category']:
-                    filtered_expenses.append(expense)
-                                   
-               
-                else:
-                    continue
+               pass
 
             else:
                 continue  #since the given month is wrong we can just ignore it
         
 
-           
+            if not category or category == expense['category']:
+                pass
+                    
+
+            else:
+                continue
 
             
            
                 
 
            
-            
+            filtered_expenses.append(expense)
         return filtered_expenses
             
 
@@ -206,5 +225,10 @@ filtered_expenses = filter_expenses("", "food")
 for i in filtered_expenses:
     print(i)
 
+create_data(expenses)
+a = open_data()
+
+for i in a:
+    print(i)
 
 
