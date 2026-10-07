@@ -1,0 +1,62 @@
+[
+    {
+        "activity": "gym",
+        "value": 50,
+        "category": "sport",
+        "date": "01/09/2024"
+    },
+    {
+        "activity": "movie",
+        "value": 15,
+        "category": "entertainment",
+        "date": "02/01/2024"
+    },
+    {
+        "activity": "restaurant",
+        "value": 30,
+        "category": "food",
+        "date": "03/01/2024"
+    },
+    {
+        "activity": "concert",
+        "value": 100,
+        "category": "entertainment",
+        "date": "04/01/2024"
+    },
+    {
+        "activity": "groceries",
+        "value": 80,
+        "category": "food",
+        "date": "05/01/2024"
+    },
+    {
+        "activity": "yoga class",
+        "value": 20,
+        "category": "sport",
+        "date": "06/01/2024"
+    },
+    {
+        "activity": "museum visit",
+        "value": 25,
+        "category": "entertainment",
+        "date": "07/01/2024"
+    },
+    {
+        "activity": "coffee shop",
+        "value": 10,
+        "category": "food",
+        "date": "08/09/2024"
+    },
+    {
+        "activity": "swimming pool",
+        "value": 15,
+        "category": "sport",
+        "date": "09/01/2024"
+    },
+    {
+        "activity": "theater play",
+        "value": 40,
+        "category": "entertainment",
+        "date": "10/01/2024"
+    }
+]
