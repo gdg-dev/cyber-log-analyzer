@@ -6,26 +6,27 @@ import json
 
 budget = 0
 
-expenses = []
 
 
-def open_data():
-    with open("expenses_data.json", "r") as file:
-        x = json.load(file)
-     
-    return x
-def create_data(data):
-    print(data)
+
+def load_data():
+    try:
+        with open("expenses_data.json", "r") as file:
+            x = json.load(file)
+
+    except FileNotFoundError:
+        print("Error the file wanted is not found. -creating a new file...")
+        create_data_file()
+    else:
+        return x
+    
+
+    
+def create_data_file(data):
     with open("expenses_data.json", "w") as file:
-        x = json.dump(data, file, indent=4)
-
-
-
-
+        json.dump(data, file, indent=4)
 
    
-
-
 class InvalidDate(Exception):
     """This error just refers to the valid dates (1-12) """
 
@@ -98,7 +99,7 @@ def filter_expenses(given_month, category):
             
 
 
-def menu():
+def menu(expenses_data):
     #this function works as a menu for the user
     print(f"""
 --Menu--
@@ -196,39 +197,22 @@ def menu():
         print(f"Total remaining: {remaining:.2f}")
         
     elif user_answar == "6":
+        create_data_file(expenses)
+        print("Data successfully saved")
         exit()
 
     else:
         print("Invalid choice please try a number from 1 to 6")
 
-"""
+expenses = load_data()
+print(expenses)
 while True:
-    menu()
+    menu(expenses)
    
-"""
-expenses = [
-    {"activity": "gym", "value": 50, "category": "sport", "date": "01/09/2024"},
-    {"activity": "movie", "value": 15, "category": "entertainment", "date": "02/01/2024"},
-    {"activity": "restaurant", "value": 30, "category": "food", "date": "03/01/2024"},
-    {"activity": "concert", "value": 100, "category": "entertainment", "date": "04/01/2024"},
-    {"activity": "groceries", "value": 80, "category": "food", "date": "05/01/2024"},
-    {"activity": "yoga class", "value": 20, "category": "sport", "date": "06/01/2024"},
-    {"activity": "museum visit", "value": 25, "category": "entertainment", "date": "07/01/2024"},
-    {"activity": "coffee shop", "value": 10, "category": "food", "date": "08/09/2024"},
-    {"activity": "swimming pool", "value": 15, "category": "sport", "date": "09/01/2024"},
-    {"activity": "theater play", "value": 40, "category": "entertainment", "date": "10/01/2024"},
 
-]
 
-#filter_expenses("", "sport")
-filtered_expenses = filter_expenses("", "food")
-for i in filtered_expenses:
-    print(i)
+    
 
-create_data(expenses)
-a = open_data()
 
-for i in a:
-    print(i)
 
 
