@@ -14,6 +14,10 @@ def load_data():
         with open("expenses_data.json", "r") as file:
             x = json.load(file)
 
+            if x == None:
+                create_data_file()
+
+
     except FileNotFoundError:
         print("Error the file wanted is not found. -creating a new file...")
         create_data_file()
@@ -22,7 +26,8 @@ def load_data():
     
 
     
-def create_data_file(data):
+def create_data_file(data="Empthy file"):
+
     with open("expenses_data.json", "w") as file:
         json.dump(data, file, indent=4)
 
@@ -99,7 +104,7 @@ def filter_expenses(given_month, category):
             
 
 
-def menu(expenses_data):
+def menu():
     #this function works as a menu for the user
     print(f"""
 --Menu--
@@ -123,6 +128,7 @@ def menu(expenses_data):
             value = float(input("\nType the value of your expense: "))
             category = input("\nType the category of your expense: ").lower()
             add_expense(activity, value, category)
+            create_data_file(expenses)
 
         except ValueError as e:
             print(f"\nError: [{e}] try again later")
@@ -142,7 +148,7 @@ def menu(expenses_data):
             print("\nThe date given is not correct please try something from 1-12")
 
         else:
-            expenses_by_date = filter_expenses(given_date, "sport")
+            expenses_by_date = filter_expenses(given_date, "")
             spent, remaining = calculate_total(expenses_by_date)
             show_expenses(expenses_by_date)
             
@@ -191,13 +197,13 @@ def menu(expenses_data):
         
     elif user_answar == "5":
         print(budget)
-        spent , remaining = calculate_total()
+        spent , remaining = calculate_total(expenses)
         print(f"\nTotal budget: {budget:.2f}") 
         print(f"Total spent: {spent:.2f}")
         print(f"Total remaining: {remaining:.2f}")
         
     elif user_answar == "6":
-        create_data_file(expenses)
+        
         print("Data successfully saved")
         exit()
 
@@ -205,9 +211,9 @@ def menu(expenses_data):
         print("Invalid choice please try a number from 1 to 6")
 
 expenses = load_data()
-print(expenses)
+
 while True:
-    menu(expenses)
+    menu()
    
 
 
