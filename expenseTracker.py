@@ -10,26 +10,37 @@ budget = 0
 
 
 def load_data():
+    #this function loads the data from the json file and returns it to the expenses variable
     try:
         with open("expenses_data.json", "r") as file:
-            x = json.load(file)
+            y = file.read()
+            print(y)
+            x = json.loads(y)
+            print(x)
+            
 
-            if x == None:
-                create_data_file()
 
+            if x is None:
+                x = []
+
+    except json.JSONDecodeError:
+        print("Error the file has wrong format.")
 
     except FileNotFoundError:
         print("Error the file wanted is not found. -creating a new file...")
-        create_data_file()
+        x = create_data_file([])
+        
+        return x
     else:
         return x
     
 
     
-def create_data_file(data="Empthy file"):
+def create_data_file(data):
 
     with open("expenses_data.json", "w") as file:
         json.dump(data, file, indent=4)
+        return data
 
    
 class InvalidDate(Exception):
@@ -203,8 +214,6 @@ def menu():
         print(f"Total remaining: {remaining:.2f}")
         
     elif user_answar == "6":
-        
-        print("Data successfully saved")
         exit()
 
     else:
