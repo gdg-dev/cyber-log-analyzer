@@ -12,23 +12,27 @@ budget = 0
 def load_data():
     #this function loads the data from the json file and returns it to the expenses variable
     try:
-        with open("expenses_data.json", "r") as file:
+        with open("xpenses_data.json", "r") as file:
             y = file.read()
-            print(y)
-            x = json.loads(y)
-            print(x)
+            
+            striped_y = y.strip()
+
+            if not striped_y:  #no data neither empty data like ""
+                x = []
+               
+
+            else:
+                x = json.loads(y)
             
 
 
-            if x is None:
-                x = []
-
-    except json.JSONDecodeError:
-        print("Error the file has wrong format.")
+    except json.JSONDecodeError as e :
+        print(f"Error the file has wrong format. {e}")
 
     except FileNotFoundError:
         print("Error the file wanted is not found. -creating a new file...")
-        x = create_data_file([])
+        x = []
+        create_data_file(x)
         
         return x
     else:
@@ -38,7 +42,7 @@ def load_data():
     
 def create_data_file(data):
 
-    with open("expenses_data.json", "w") as file:
+    with open("xpenses_data.json", "w") as file:
         json.dump(data, file, indent=4)
         return data
 
