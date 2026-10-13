@@ -3,7 +3,6 @@ from datetime import datetime
 import json
 
 
-
 budget = 0
 
 
@@ -12,23 +11,26 @@ budget = 0
 def load_data():
     #this function loads the data from the json file and returns it to the expenses variable
     try:
-        with open("xpenses_data.json", "r") as file:
+        with open("expenses_data.json", "r") as file:
             y = file.read()
             
             striped_y = y.strip()
 
             if not striped_y:  #no data neither empty data like ""
+                print("The file is empty")
                 x = []
                
 
             else:
                 x = json.loads(y)
-            
+                
+                   
 
 
     except json.JSONDecodeError as e :
-        print(f"Error the file has wrong format. {e}")
-
+        raise SystemExit(f"Error the file has wrong format stoping program... {e}")
+        
+    
     except FileNotFoundError:
         print("Error the file wanted is not found. -creating a new file...")
         x = []
@@ -36,13 +38,16 @@ def load_data():
         
         return x
     else:
+        if x is None:
+            raise ValueError("the file has null data")
+         
         return x
     
 
     
 def create_data_file(data):
 
-    with open("xpenses_data.json", "w") as file:
+    with open("expenses_data.json", "w") as file:
         json.dump(data, file, indent=4)
         return data
 
