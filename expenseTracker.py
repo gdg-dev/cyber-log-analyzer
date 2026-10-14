@@ -17,7 +17,6 @@ def load_data():
             striped_y = y.strip()
 
             if not striped_y:  #no data neither empty data like ""
-                print("The file is empty")
                 x = []
                
 
@@ -38,9 +37,9 @@ def load_data():
         
         return x
     else:
-        if x is None:
+        if not isinstance(x, list):
             raise ValueError("the file has null data")
-         
+        validate_json_data(x)
         return x
     
 
@@ -49,9 +48,16 @@ def create_data_file(data):
 
     with open("expenses_data.json", "w") as file:
         json.dump(data, file, indent=4)
-        return data
-
-   
+        
+def validate_json_data(data):
+    print(data)
+    validate = ["activity", "value", "category", "date"]
+    for expense in data:
+        if not isinstance(expense, dict):
+            print("this is not a dictionry")
+        if any(key not in expense for key in validate):
+            print("missing")
+        
 class InvalidDate(Exception):
     """This error just refers to the valid dates (1-12) """
 
