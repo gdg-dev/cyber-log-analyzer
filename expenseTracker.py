@@ -39,7 +39,8 @@ def load_data():
     else:
         if not isinstance(x, list):
             raise ValueError("the file has null data")
-        validate_json_data(x)
+        if not validate_json_data(x):
+            raise ValueError("the file has invalid data")
         return x
     
 
@@ -50,14 +51,18 @@ def create_data_file(data):
         json.dump(data, file, indent=4)
         
 def validate_json_data(data):
-    print(data)
+    #this function validates the data from the json file to make sure it is correct and not missing any key
+
     validate = ["activity", "value", "category", "date"]
     for expense in data:
         if not isinstance(expense, dict):
-            print("this is not a dictionry")
-        if any(key not in expense for key in validate):
-            print("missing")
-        
+            print("Not a dictionary")
+            return False
+        if any(key not in expense.keys() for key in validate):
+            print("Missing keys in expense data")
+            return False
+    return True
+
 class InvalidDate(Exception):
     """This error just refers to the valid dates (1-12) """
 
