@@ -1,9 +1,9 @@
 #This is my project to track the expenses of the user. 
 from datetime import datetime
 import json
-
-
+date_format = "%d/%m/%Y"
 budget = 0
+
 
 
 
@@ -38,7 +38,7 @@ def load_data():
         return x
     else:
         if not isinstance(x, list):
-            raise ValueError("the file has null data")
+            raise ValueError("the file must contain a list of expenses.")
         if not validate_json_data(x):
             raise ValueError("the file has invalid data")
         return x
@@ -53,14 +53,37 @@ def create_data_file(data):
 def validate_json_data(data):
     #this function validates the data from the json file to make sure it is correct and not missing any key
 
-    validate = ["activity", "value", "category", "date"]
+    required_keys = ["activity", "value", "category", "date"]
     for expense in data:
+  
         if not isinstance(expense, dict):
             print("Not a dictionary")
             return False
-        if any(key not in expense.keys() for key in validate):
+        if any(key not in expense for key in required_keys):
             print("Missing keys in expense data")
             return False
+
+        if not isinstance(expense['activity'], str):
+            print("The activity isn't a string")
+            return False
+        if not isinstance(expense['value'], (float, int)):
+            print("The value isn't a float or integer")
+            return False
+        if isinstance(expense['category'], bool) or not isinstance(expense['category'], (float, int)):
+            print("The category isn't a string")
+            return False
+        try:
+
+            if not isinstance(datetime.strptime(expense['date'], date_format), datetime):
+                print("The date isn't valid")
+               
+        except ValueError as e:
+            print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
+            return False
+        except TypeError as e:
+            print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
+            return False
+            
     return True
 
 class InvalidDate(Exception):
@@ -75,7 +98,7 @@ def add_expense(activity, value, category):
     #this function add's a expense to expenses with a activity and a value given
     date = datetime.now()
 
-    expenses.append({"activity": activity, "value": value, "category": category, "date": date.strftime("%d/%m/%Y")})   #<-- does not need to return because append already returns None
+    expenses.append({"activity": activity, "value": value, "category": category, "date": date.strftime(date_format)})   #<-- does not need to return because append already returns None
 
 def show_expenses(filtered_expenses_dict):
 
