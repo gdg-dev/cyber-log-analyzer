@@ -66,16 +66,21 @@ def validate_json_data(data):
         if not isinstance(expense['activity'], str):
             print("The activity isn't a string")
             return False
-        if not isinstance(expense['value'], (float, int)):
+        if isinstance(expense['value'], bool) or( not isinstance(expense['value'], (int, float)) and expense['value'] >= 0):
             print("The value isn't a float or integer")
             return False
-        if isinstance(expense['category'], bool) or not isinstance(expense['category'], (float, int)):
+        if not isinstance(expense['category'], str):
             print("The category isn't a string")
             return False
         try:
+            if not isinstance(expense['date'], str):
+                print("The date isn't a string")
+                return False
+            datetime.strptime(expense['date'] , date_format)
+            
 
-            if not isinstance(datetime.strptime(expense['date'], date_format), datetime):
-                print("The date isn't valid")
+
+            
                
         except ValueError as e:
             print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
