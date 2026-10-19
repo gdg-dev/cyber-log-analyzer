@@ -66,8 +66,11 @@ def validate_json_data(data):
         if not isinstance(expense['activity'], str):
             print("The activity isn't a string")
             return False
-        if isinstance(expense['value'], bool) or( not isinstance(expense['value'], (int, float)) and expense['value'] >= 0):
+        if isinstance(expense['value'], bool) or not isinstance(expense['value'], (int, float)):
             print("The value isn't a float or integer")
+            return False
+        elif expense['value'] < 0:
+            print("The value is negative")
             return False
         if not isinstance(expense['category'], str):
             print("The category isn't a string")
