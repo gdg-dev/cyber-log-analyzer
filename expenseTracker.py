@@ -37,6 +37,7 @@ def load_data():
         
         return x
     else:
+        #assert isinstance(x, list), "the file must contain a list of expenses."
         if not isinstance(x, list):
             raise ValueError("the file must contain a list of expenses.")
         if not validate_json_data(x):
@@ -44,21 +45,31 @@ def load_data():
         return x
     
 
-    
+
+
 def create_data_file(data):
 
     with open("expenses_data.json", "w") as file:
         json.dump(data, file, indent=4)
-        
+def test_validate_json_data():
+    required_keys = ['activity', 'value', 'category', 'date']
+    assert validate_json_data(expenses) is True, "The given data has a problem"
+    for i in expenses:
+        assert all(key in i for key in required_keys) and isinstance(i, dict), "there is a problem with, or a non dict data or a key not in the required keys"
+        assert not isinstance(i['value'], bool) and isinstance(i['value'], (float, int)), "the value is not a number"
+        assert datetime.strptime(i['date'], date_format), "the given time is wrong"
+    print("passed")  
+
 def validate_json_data(data):
     #this function validates the data from the json file to make sure it is correct and not missing any key
 
     required_keys = ["activity", "value", "category", "date"]
     for expense in data:
-  
+        #assert isinstance(expense, dict), "Each expense must be a dictionary"
         if not isinstance(expense, dict):
             print("Not a dictionary")
             return False
+        #assert any(key  in expense for key in required_keys), "Missing keys in expense data"
         if any(key not in expense for key in required_keys):
             print("Missing keys in expense data")
             return False
@@ -66,21 +77,27 @@ def validate_json_data(data):
         if not isinstance(expense['activity'], str):
             print("The activity isn't a string")
             return False
+        #assert isinstance(expense['value'], bool) or not isinstance(expense['value'], (int, float)), "The value is a boolean"
+
+
         if isinstance(expense['value'], bool) or not isinstance(expense['value'], (int, float)):
             print("The value isn't a float or integer")
             return False
+        
         elif expense['value'] < 0:
             print("The value is negative")
             return False
+        #assert expense['value'] >= 0, "The value is negative"
         if not isinstance(expense['category'], str):
             print("The category isn't a string")
             return False
         try:
+            
             if not isinstance(expense['date'], str):
                 print("The date isn't a string")
                 return False
+            #assert datetime.strptime(expense['date'] , date_format), "The date is not in the correct format"
             datetime.strptime(expense['date'] , date_format)
-            
 
 
             
@@ -88,10 +105,8 @@ def validate_json_data(data):
         except ValueError as e:
             print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
             return False
-        except TypeError as e:
-            print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
-            return False
-            
+        
+    #assert True, "The data is valid"   
     return True
 
 class InvalidDate(Exception):
@@ -271,7 +286,7 @@ def menu():
         print("Invalid choice please try a number from 1 to 6")
 
 expenses = load_data()
-
+test_validate_json_data()
 while True:
     menu()
    
