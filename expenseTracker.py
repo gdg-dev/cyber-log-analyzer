@@ -1,6 +1,9 @@
 #This is my project to track the expenses of the user. 
 from datetime import datetime
 import json
+import os
+
+
 date_format = "%d/%m/%Y"
 budget = 0
 
@@ -33,7 +36,7 @@ def load_data(file_name="expenses_data.json"):
     except FileNotFoundError:
         print("Error the file wanted is not found. -creating a new file...")
         x = []
-        create_data_file(x)
+        create_data_file(x, file_name)
         
         return x
     else:
@@ -126,6 +129,12 @@ def test_validate_json_data():
     assert validate_json_data(value_str) is False, "Error in the str value"
     assert validate_json_data(negative_value) is False, "Error in the negative value"
     print("All validations from validate_json_data are working")
+
+def test_load_data():
+    file_name = "fake_expenses_data.json"
+    assert load_data(file_name) == [], "Error in the different file name"
+    assert os.path.exists(file_name), "Error this file doesn't exist"
+
 def validate_json_data(data):
     #this function validates the data from the json file to make sure it is correct and not missing any key
 
@@ -354,6 +363,9 @@ def menu():
 expenses = load_data()
 test_validate_json_data()
 test_create_data_file()
+test_load_data()
+expensesb = load_data()
+assert expenses == expensesb, "the real data has changed"
 while True:
     menu()
    
