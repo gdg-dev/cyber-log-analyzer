@@ -8,20 +8,23 @@ from expenseTracker import load_data, create_data_file, validate_json_data
 
 #this function creates data for testing
 def create_test_data(test_data):
-    with tempfile.NamedTemporaryFile(suffix=".json", encoding="utf-8", mode="w", delete=False) as temporary_file:
-        print(temporary_file.name)
-        json.dump(test_data, temporary_file, indent=4)
-     
-
-        
-
+    
+       
     try:
-        create_data_file(test_data, temporary_file.name)
-        load_test_data = load_data(temporary_file.name)
+        with tempfile.NamedTemporaryFile(suffix=".json", encoding="utf-8", mode="w", delete=False) as temporary_file:
+           
 
-        assert test_data == load_test_data, "Error the file content is different"
-        test_validate_json_data(load_test_data)
-   
+            json.dump(test_data, temporary_file, indent=4)
+
+            #temporary_file.read()
+            
+            create_data_file(test_data, temporary_file.name)
+            load_test_data = load_data(temporary_file.name)
+            print(load_test_data)
+
+            assert test_data == load_test_data, "Error the file content is different,check the load_data function"
+            test_validate_json_data(load_test_data)
+
     finally:
         os.remove(temporary_file.name)
         print("all good")
@@ -33,7 +36,7 @@ def test_validate_json_data(data):
     #This function checkes that validate_json_data is working well
     print(data)
     #assert validate_json_data(data) is True, "Error in the valid data, non empty data"
-    assert validate_json_data(data) is False, "Error something went wrong"
+    assert validate_json_data(data) is True, "Error something went wrong"
     #assert validate_json_data(data) is False, "Error in the non dict data"
     #assert validate_json_data(data) is False, "Error in the invalid date"
     #assert validate_json_data(data) is False, "Error in the missing category"
