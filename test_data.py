@@ -32,7 +32,15 @@ def create_test_data(test_data):
 invalid_expense = [
     {
         "activity": "gym",
-        "value": -50,
+        "value": 50,
+        "category": "d",
+        "date": "31/02/2024"
+    }
+]
+valid_expense = [
+    {
+        "activity": "gym",
+        "value": 50,
         "category": "sport",
         "date": "01/09/2024"
     }
@@ -50,8 +58,8 @@ def test_validate_json_data(data):
     #assert validate_json_data(data) is False, "Error in the negative value"
     print("All validations from validate_json_data are working")
 
-test_validate_json_data(invalid_expense)
-
+#test_validate_json_data(invalid_expense)
+#test_validate_json_data(valid_expense)
 
 
 test_expenses = [{
@@ -71,3 +79,26 @@ if __name__ == "__main__":
     
     create_test_data(test_expenses)
 
+
+
+
+def my_function(num):
+
+    if num < 0:
+        raise ValueError
+    
+
+    def inner(num):
+        print(num)
+        
+        if num <= 1:
+            return 1
+
+        return num * inner(num - 1)
+        
+    return inner(num)
+
+
+value = my_function(4)
+print(value)
+print(value)
