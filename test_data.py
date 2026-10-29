@@ -102,3 +102,16 @@ def my_function(num):
 value = my_function(4)
 print(value)
 print(value)
+
+
+def count_down(number):
+    
+    
+    if number <= 0:
+        return 0
+
+    return f"{number} {count_down(number - 1)}"
+    
+
+    
+print(count_down(4))
