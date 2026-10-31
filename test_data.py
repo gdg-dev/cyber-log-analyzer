@@ -81,37 +81,25 @@ if __name__ == "__main__":
 
 
 
+import time
+def timer(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        returned_value = func(*args, **kwargs)
+        stop = time.time()
+        print(f"Final time: {stop - start}")
+        print(f"{args}, {kwargs}, {returned_value}")
 
-def my_function(num):
+    return wrapper
 
-    if num < 0:
-        raise ValueError
-    
+@timer
+def add(a,b):
+    return a + b
 
-    def inner(num):
-        print(num)
-        
-        if num <= 1:
-            return 1
-
-        return num * inner(num - 1)
-        
-    return inner(num)
+@timer
+def product(a,b):
+    return a * b
+add(1,3)
+product(2,5)
 
 
-value = my_function(4)
-print(value)
-print(value)
-
-
-def count_down(number):
-    
-    
-    if number <= 0:
-        return 0
-
-    return f"{number} {count_down(number - 1)}"
-    
-
-    
-print(count_down(4))
