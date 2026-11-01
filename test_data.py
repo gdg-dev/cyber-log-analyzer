@@ -81,25 +81,32 @@ if __name__ == "__main__":
 
 
 
-import time
-def timer(func):
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        returned_value = func(*args, **kwargs)
-        stop = time.time()
-        print(f"Final time: {stop - start}")
-        print(f"{args}, {kwargs}, {returned_value}")
+def repeat(times):
+    def outer(func):
 
-    return wrapper
+        def inner(*args, **kwargs):
+           
+            time_b =   times
+            while time_b >= 1:
 
-@timer
-def add(a,b):
-    return a + b
+                func(*args, **kwargs)   
+                time_b -= 1
 
-@timer
-def product(a,b):
-    return a * b
-add(1,3)
-product(2,5)
+        return inner   
+    return outer
+
+@repeat(5)
+def greet(a):
+    print("Hello!" + str(a))
+
+greet(1)
+greet(3)
+
+
+
+
+
+
+
 
 
