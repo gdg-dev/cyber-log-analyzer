@@ -79,34 +79,45 @@ if __name__ == "__main__":
     
     create_test_data(test_expenses)
 
+def strong(func):
+    def wrapper():
+        return '<strong>' + func() + '</strong>'
+    return wrapper
+
+def emphasis(func):
+    def wrapper():
+        return '<em>' + func() + '</em>'
+    return wrapper
 
 
-def repeat(times):
-    def outer(func):
 
-        def inner(*args, **kwargs):
-           
-            time_b =   times
-            while time_b >= 1:
+@strong
+@emphasis
+def greet():
+    return 'Hello!'
 
-                func(*args, **kwargs)   
-                time_b -= 1
-
-        return inner   
-    return outer
-
-@repeat(5)
-def greet(a):
-    print("Hello!" + str(a))
-
-greet(1)
-greet(3)
+print(greet())
 
 
 
 
+def outer(func):
+    def inner():
+        print("Before the function is called.")
+        func()
+        print("After the function is called.")
+    return inner
 
+def outer_2(func):
+    def inner():
+        print("Before the function is called.")
+        func()
+        print("After the function is called.")
+    return inner
 
+@outer
+@outer_2
+def my_function():
+    print("Inside the function.")
 
-
-
+my_function()
