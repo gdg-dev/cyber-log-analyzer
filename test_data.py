@@ -79,45 +79,67 @@ if __name__ == "__main__":
     
     create_test_data(test_expenses)
 
-def strong(func):
-    def wrapper():
-        return '<strong>' + func() + '</strong>'
-    return wrapper
-
-def emphasis(func):
-    def wrapper():
-        return '<em>' + func() + '</em>'
-    return wrapper
 
 
-
-@strong
-@emphasis
-def greet():
-    return 'Hello!'
-
-print(greet())
-
-
-
-
+import functools
+ 
+ 
+def retry(attempts):                      # layer 1: remembers the number
+    def decorator(function):              # layer 2: receives the function
+        @functools.wraps(function)
+        def wrapper(*args, **kwargs):     # layer 3: runs on every call
+            last_error = None
+ 
+            for attempt in range(1, attempts + 1):
+                try:
+                    return function(*args, **kwargs)   # success: stop and return
+                except Exception as e:
+                    last_error = e                     # save it, `e` disappears after this block
+                    print(f"Attempt {attempt} failed: {e}")
+ 
+            raise last_error                           # every attempt failed
+ 
+        return wrapper
+    return decorator
+ 
+ 
+# ---- test ----
+calls = 0
+ 
+ 
+@retry(3)
+def flaky(name):
+    global calls
+    calls += 1
+    if calls < 3:
+        raise ValueError(f"boom #{calls}")
+    return f"hello {name}"
+ 
+ 
+print(flaky("Ana"))
+print(flaky.__name__)   # 
 def outer(func):
-    def inner():
-        print("Before the function is called.")
-        func()
-        print("After the function is called.")
-    return inner
+    def wrapper(*args):
+        func(*args)
+    return wrapper
 
-def outer_2(func):
-    def inner():
-        print("Before the function is called.")
-        func()
-        print("After the function is called.")
-    return inner
 
-@outer
-@outer_2
-def my_function():
-    print("Inside the function.")
+#@outer   
+def greet(name):
+    print(f"hi {name}")
 
-my_function()
+greet = outer(greet)
+
+greet("juan")
+
+
+
+
+
+
+
+
+
+
+
+
