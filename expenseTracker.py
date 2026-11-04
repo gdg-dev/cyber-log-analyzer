@@ -7,7 +7,7 @@ import os
 
 
 date_format = "%d/%m/%Y"
-budget = 0
+
 
 
 
@@ -22,11 +22,13 @@ def load_data(file_name="expenses_data.json"):
             striped_y = y.strip()
 
             if not striped_y:  #no data neither empty data like ""
-                x = []
-               
+                x = {"expenses" : [], "budget": 0}
+                return x
 
             else:
                 x = json.loads(y)
+                return x
+                
                 
                    
 
@@ -37,14 +39,14 @@ def load_data(file_name="expenses_data.json"):
     
     except FileNotFoundError:
         print("Error the file wanted is not found. -creating a new file...")
-        x = []
+        x = {"expenses": [], "budget":0}
         create_data_file(x, file_name)
         
         return x
     else:
-        #assert isinstance(x, list), "the file must contain a list of expenses."
-        if not isinstance(x, list):
-            raise ValueError("the file must contain a list of expenses.")
+        #assert isinstance(x, dict), "the file must contain a dict of expenses and budget."
+        if not isinstance(x, dict):
+            raise ValueError("the file must contain a dictionary with expenses and budget.")
         if not validate_json_data(x):
             raise ValueError("the file has invalid data")
         return x
@@ -52,10 +54,11 @@ def load_data(file_name="expenses_data.json"):
 
 
 
-def create_data_file(data, file_name="expenses_data.json"):
-
+def create_data_file(data, budget_num, file_name="expenses_data.json"):
+    final_data = {"expenses":data, "budget":budget_num}
     with open(file_name, "w") as file:
-        json.dump(data, file, indent=4)
+        json.dump(final_data, file, indent=4)
+
 
 
 
@@ -63,8 +66,9 @@ def validate_json_data(data):
     #this function validates the data from the json file to make sure it is correct and not missing any key
 
     required_keys = ["activity", "value", "category", "date"]
-    for expense in data:
-        #assert isinstance(expense, dict), "Each expense must be a dictionary"
+    for expense in data["expenses"]:
+        print(expense)
+    #assert isinstance(expense, dict), "Each expense must be a dictionary"
         if not isinstance(expense, dict):
             print("Not a dictionary")
             return False
@@ -100,7 +104,7 @@ def validate_json_data(data):
 
 
             
-               
+            
         except ValueError as e:
             print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
             return False
@@ -182,6 +186,7 @@ def filter_expenses(given_month, category):
 
 def menu():
     #this function works as a menu for the user
+    
     print(f"""
 --Menu--
 
@@ -193,8 +198,8 @@ def menu():
 6- Exit
 """)
 
-    
-    print(budget)
+    #print(f"Current budget: €{budget_now:.2f}")
+   
     user_answar = input("what is your choice: ")
 
     if user_answar == "1":
@@ -204,7 +209,7 @@ def menu():
             value = float(input("\nType the value of your expense: "))
             category = input("\nType the category of your expense: ").lower()
             add_expense(activity, value, category)
-            create_data_file(expenses)
+            create_data_file(expenses, budget_now)
 
         except ValueError as e:
             print(f"\nError: [{e}] try again later")
@@ -234,7 +239,7 @@ def menu():
                 print("\nNo expenses")
 
 
-            elif spent > budget:
+            elif spent > budget_now:
                 print("\nYou have exceeded the budget! Be carefull")
 
             print(f"\nTotal spent [€{spent:.2f}]") 
@@ -268,13 +273,16 @@ def menu():
         except ValueError as e:
             print(f"Error: [{e}] please try again later")
         else:    
-            set_budget(budget_given)
+            budget_now = set_budget(budget_given)
+            
+            create_data_file(expenses, budget_now)
+            
             
         
     elif user_answar == "5":
-        print(budget)
+        print(budget_now)
         spent , remaining = calculate_total(expenses)
-        print(f"\nTotal budget: {budget:.2f}") 
+        print(f"\nTotal budget: {budget_now:.2f}") 
         print(f"Total spent: {spent:.2f}")
         print(f"Total remaining: {remaining:.2f}")
         
@@ -284,15 +292,29 @@ def menu():
     else:
         print("Invalid choice please try a number from 1 to 6")
 
-expenses = load_data()
-"""
-while True:
-    print("hi")
 
-"""
-print("hi")
+
+
+
+
+def func_tion():
+    print(a)
+a = 23
+func_tion()
+
+if __name__ == "__main__":
+
+    expenses_dict = load_data()
     
-
-
+    
+    expenses = expenses_dict["expenses"]
+    budget_now = expenses_dict["budget"]
+    print(budget_now)
+    print(expenses)
+    
+    #final_data = {"expenses": expenses, "budget":budget}
+    #create_data_file(final_data)
+    while True:
+        menu()
 
 
