@@ -22,12 +22,12 @@ def load_data(file_name="expenses_data.json"):
             striped_y = y.strip()
 
             if not striped_y:  #no data neither empty data like ""
-                x = {"expenses" : [], "budget": 0}
+                x = {"expenses" : [], "budget": 0.0}
                 return x
 
             else:
                 x = json.loads(y)
-                return x
+                return x  #this is a list of expenses which is a dictionary and a variable budget
                 
                 
                    
@@ -39,8 +39,8 @@ def load_data(file_name="expenses_data.json"):
     
     except FileNotFoundError:
         print("Error the file wanted is not found. -creating a new file...")
-        x = {"expenses": [], "budget":0}
-        create_data_file(x, file_name)
+        #x = {"expenses": [], "budget":0.0}
+        create_data_file(data=[], budget_num=0.0)
         
         return x
     else:
@@ -55,6 +55,7 @@ def load_data(file_name="expenses_data.json"):
 
 
 def create_data_file(data, budget_num, file_name="expenses_data.json"):
+
     final_data = {"expenses":data, "budget":budget_num}
     with open(file_name, "w") as file:
         json.dump(final_data, file, indent=4)
@@ -109,8 +110,8 @@ def validate_json_data(data):
             print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
             return False
         
-    #assert True, "The data is valid"   
-    return True
+        #assert True, "The data is valid"   
+        return True
 
 class InvalidDate(Exception):
     """This error just refers to the valid dates (1-12) """
@@ -134,20 +135,20 @@ def show_expenses(filtered_expenses_dict):
     
         
 def set_budget(value):
-    #this function changes the value of budget evendough using global is not the bette way
-    global budget
-    budget = value
+    #this function changes the value 
+    return value
 
 
 
-def calculate_total(filtered_expenses_dict):
+def calculate_total(filtered_expenses_dict, actual_budget):
     #this function calculates the money spent and remaing from the user and also calls the show_expenses function to show only the expenses of the month choosen
     total_spent = 0
     
     for i in filtered_expenses_dict:
+        
         total_spent += i['value']
 
-    remaining = budget - total_spent
+    remaining = actual_budget - total_spent
     return total_spent, remaining
 
 def filter_expenses(given_month, category):
@@ -184,9 +185,9 @@ def filter_expenses(given_month, category):
             
 
 
-def menu():
+def menu(budget_now):
     #this function works as a menu for the user
-    
+
     print(f"""
 --Menu--
 
@@ -230,7 +231,7 @@ def menu():
 
         else:
             expenses_by_date = filter_expenses(given_date, "")
-            spent, remaining = calculate_total(expenses_by_date)
+            spent, remaining = calculate_total(expenses_by_date, budget_now)
             show_expenses(expenses_by_date)
             
 
@@ -261,7 +262,7 @@ def menu():
 
         else:
             expenses_by_category = filter_expenses("", category)
-            spent, remaining = calculate_total(expenses_by_category)
+            spent, remaining = calculate_total(expenses_by_category, budget_now)
             show_expenses(expenses_by_category)
             print(f"\nTotal spent ->€{spent:.2f},Remaining €{remaining:.2f}")
 
@@ -274,14 +275,16 @@ def menu():
             print(f"Error: [{e}] please try again later")
         else:    
             budget_now = set_budget(budget_given)
+            print(budget_now)
             
             create_data_file(expenses, budget_now)
+            return budget_now
             
             
         
     elif user_answar == "5":
         print(budget_now)
-        spent , remaining = calculate_total(expenses)
+        spent , remaining = calculate_total(expenses, budget_now)
         print(f"\nTotal budget: {budget_now:.2f}") 
         print(f"Total spent: {spent:.2f}")
         print(f"Total remaining: {remaining:.2f}")
@@ -297,10 +300,7 @@ def menu():
 
 
 
-def func_tion():
-    print(a)
-a = 23
-func_tion()
+
 
 if __name__ == "__main__":
 
@@ -308,13 +308,16 @@ if __name__ == "__main__":
     
     
     expenses = expenses_dict["expenses"]
-    budget_now = expenses_dict["budget"]
+    budget_now = float(expenses_dict["budget"])
     print(budget_now)
+    print(type(budget_now))
     print(expenses)
     
     #final_data = {"expenses": expenses, "budget":budget}
     #create_data_file(final_data)
+    new_budget = budget_now
     while True:
-        menu()
+        new_budget = menu(new_budget)
+        
 
 
