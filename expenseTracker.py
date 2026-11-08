@@ -22,12 +22,14 @@ def load_data(file_name="expenses_data.json"):
             striped_y = y.strip()
 
             if not striped_y:  #no data neither empty data like ""
+                print("empty_file")
                 x = {"expenses" : [], "budget": 0.0}
+                create_data_file([], 0.0)
                 return x
 
             else:
                 x = json.loads(y)
-                return x  #this is a list of expenses which is a dictionary and a variable budget
+                
                 
                 
                    
@@ -39,9 +41,7 @@ def load_data(file_name="expenses_data.json"):
     
     except FileNotFoundError:
         print("Error the file wanted is not found. -creating a new file...")
-        #x = {"expenses": [], "budget":0.0}
-        create_data_file(data=[], budget_num=0.0)
-        
+        x = create_data_file(data=[], budget_num=0.0)
         return x
     else:
         #assert isinstance(x, dict), "the file must contain a dict of expenses and budget."
@@ -67,8 +67,9 @@ def validate_json_data(data):
     #this function validates the data from the json file to make sure it is correct and not missing any key
 
     required_keys = ["activity", "value", "category", "date"]
+    
     for expense in data["expenses"]:
-        print(expense)
+        
     #assert isinstance(expense, dict), "Each expense must be a dictionary"
         if not isinstance(expense, dict):
             print("Not a dictionary")
@@ -109,9 +110,8 @@ def validate_json_data(data):
         except ValueError as e:
             print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
             return False
-        
-        #assert True, "The data is valid"   
-        return True
+    print("no problem") 
+    return True
 
 class InvalidDate(Exception):
     """This error just refers to the valid dates (1-12) """
@@ -151,7 +151,7 @@ def calculate_total(filtered_expenses_dict, actual_budget):
     remaining = actual_budget - total_spent
     return total_spent, remaining
 
-def filter_expenses(given_month, category):
+def filter_expenses(given_month, given_year, category):
         #this function filters the expenses by mont and/or category
         filtered_expenses = []
 
@@ -159,6 +159,7 @@ def filter_expenses(given_month, category):
         for expense in expenses:
             date_int = datetime.strptime(expense['date'], date_formate)
             month = date_int.month
+            year = date_int.year
 
 
             if not given_month or given_month == str(month):
@@ -167,6 +168,11 @@ def filter_expenses(given_month, category):
             else:
                 continue  #since the given month is wrong we can just ignore it
         
+            if not given_year or given_year == str(year):
+                pass
+
+            else:
+                continue    
 
             if not category or category == expense['category']:
                 pass
@@ -187,7 +193,7 @@ def filter_expenses(given_month, category):
 
 def menu(budget_now):
     #this function works as a menu for the user
-
+   
     print(f"""
 --Menu--
 
@@ -211,6 +217,7 @@ def menu(budget_now):
             category = input("\nType the category of your expense: ").lower()
             add_expense(activity, value, category)
             create_data_file(expenses, budget_now)
+            return budget_now
 
         except ValueError as e:
             print(f"\nError: [{e}] try again later")
@@ -221,6 +228,7 @@ def menu(budget_now):
         valid_dates = ["1","2","3","4","5","6","7","8","9","10","11","12", ""]
         try:
             given_date = input("\nInsert the number of the month wanted from 1 to 12. (if you want all expanses just press enter with no text): ")
+            given_year = input("\nInsert the year wanted (if you want all years just press (enter with no text)). ")
             if not given_date in valid_dates:
                 raise InvalidDate
 
@@ -230,7 +238,7 @@ def menu(budget_now):
             print("\nThe date given is not correct please try something from 1-12")
 
         else:
-            expenses_by_date = filter_expenses(given_date, "")
+            expenses_by_date = filter_expenses(given_date,given_year,  "")
             spent, remaining = calculate_total(expenses_by_date, budget_now)
             show_expenses(expenses_by_date)
             
@@ -244,6 +252,7 @@ def menu(budget_now):
                 print("\nYou have exceeded the budget! Be carefull")
 
             print(f"\nTotal spent [€{spent:.2f}]") 
+            return budget_now
 
         
     elif user_answar == "3":
@@ -265,6 +274,7 @@ def menu(budget_now):
             spent, remaining = calculate_total(expenses_by_category, budget_now)
             show_expenses(expenses_by_category)
             print(f"\nTotal spent ->€{spent:.2f},Remaining €{remaining:.2f}")
+            return budget_now
 
     elif user_answar == "4":
         try:
@@ -288,8 +298,10 @@ def menu(budget_now):
         print(f"\nTotal budget: {budget_now:.2f}") 
         print(f"Total spent: {spent:.2f}")
         print(f"Total remaining: {remaining:.2f}")
+        return budget_now
         
     elif user_answar == "6":
+        
         exit()
 
     else:
@@ -309,14 +321,16 @@ if __name__ == "__main__":
     
     expenses = expenses_dict["expenses"]
     budget_now = float(expenses_dict["budget"])
-    print(budget_now)
-    print(type(budget_now))
-    print(expenses)
+    #print(budget_now)
+    #print(type(budget_now))
+    #print(expenses)
     
     #final_data = {"expenses": expenses, "budget":budget}
     #create_data_file(final_data)
     new_budget = budget_now
+   
     while True:
+        #print(new_budget)
         new_budget = menu(new_budget)
         
 
