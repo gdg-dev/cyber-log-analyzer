@@ -25,7 +25,7 @@ def load_data(file_name="expenses_data.json"):
                 print("empty_file")
                 x = {"expenses" : [], "budget": 0.0}
                 create_data_file([], 0.0)
-                return x
+                #return x
 
             else:
                 x = json.loads(y)
@@ -41,8 +41,8 @@ def load_data(file_name="expenses_data.json"):
     
     except FileNotFoundError:
         print("Error the file wanted is not found. -creating a new file...")
-        x = create_data_file(data=[], budget_num=0.0)
-        return x
+        create_data_file(data=[], budget_num=0.0)
+        return load_data()
     else:
         #assert isinstance(x, dict), "the file must contain a dict of expenses and budget."
         if not isinstance(x, dict):
@@ -65,8 +65,13 @@ def create_data_file(data, budget_num, file_name="expenses_data.json"):
 
 def validate_json_data(data):
     #this function validates the data from the json file to make sure it is correct and not missing any key
-
     required_keys = ["activity", "value", "category", "date"]
+
+
+    if not isinstance(data['expenses'], list):
+        print("the sturcture is not a list")
+        return False
+    
     
     for expense in data["expenses"]:
         
@@ -104,12 +109,18 @@ def validate_json_data(data):
             #assert datetime.strptime(expense['date'] , date_format), "The date is not in the correct format"
             datetime.strptime(expense['date'] , date_format)
 
-
-            
-            
         except ValueError as e:
             print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
-            return False
+
+    if  data['budget'] < 0 :
+        raise ValueError("The budget can not be negative")
+        
+    elif isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, bool)) :
+        raise ValueError("The budget is not a number")
+            
+    #return False
+
+        
     print("no problem") 
     return True
 
