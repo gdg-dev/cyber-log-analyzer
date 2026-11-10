@@ -25,7 +25,7 @@ def load_data(file_name="expenses_data.json"):
                 print("empty_file")
                 x = {"expenses" : [], "budget": 0.0}
                 create_data_file([], 0.0)
-                #return x
+                return x
 
             else:
                 x = json.loads(y)
@@ -112,13 +112,23 @@ def validate_json_data(data):
         except ValueError as e:
             print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
 
-    if  data['budget'] < 0 :
-        raise ValueError("The budget can not be negative")
+    try:
         
-    elif isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, bool)) :
-        raise ValueError("The budget is not a number")
+        if not "budget" in data:
+            print("NO DATA BUDGET")
+            raise ValueError("There is no budget in the data given")
+
+        
+        if  data['budget'] < 0 :
+            raise ValueError("The budget can not be negative")
             
-    #return False
+        if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, bool)) :
+            raise ValueError("The budget is not a number")
+
+    except ValueError:
+        print("There is a problem")
+        return False
+ 
 
         
     print("no problem") 
