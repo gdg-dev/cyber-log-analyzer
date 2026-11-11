@@ -1,6 +1,7 @@
 #This is my project to track the expenses of the user. 
 from datetime import datetime
 import json
+import math
 import os
 
 
@@ -34,7 +35,6 @@ def load_data(file_name="expenses_data.json"):
                 
                    
 
-
     except json.JSONDecodeError as e :
         raise SystemExit(f"Error the file has wrong format stoping program... {e}")
         
@@ -44,9 +44,8 @@ def load_data(file_name="expenses_data.json"):
         create_data_file(data=[], budget_num=0.0)
         return load_data()
     else:
-        #assert isinstance(x, dict), "the file must contain a dict of expenses and budget."
-        if not isinstance(x, dict):
-            raise ValueError("the file must contain a dictionary with expenses and budget.")
+        
+        
         if not validate_json_data(x):
             raise ValueError("the file has invalid data")
         return x
@@ -67,7 +66,19 @@ def validate_json_data(data):
     #this function validates the data from the json file to make sure it is correct and not missing any key
     required_keys = ["activity", "value", "category", "date"]
 
-
+    if not isinstance(data, dict):
+        print("The data structure is wrong , it isnt a dictionary")
+        return False
+    
+    if not "expenses" in data:
+        print("there is no expenses")
+        return False
+    
+    if not "budget" in data:
+        print("ther is no budget in data")
+        return False
+    
+    
     if not isinstance(data['expenses'], list):
         print("the sturcture is not a list")
         return False
@@ -87,19 +98,17 @@ def validate_json_data(data):
         if not isinstance(expense['activity'], str):
             print("The activity isn't a string")
             return False
-        #assert isinstance(expense['value'], bool) or not isinstance(expense['value'], (int, float)), "The value is a boolean"
-
+    
+        if not isinstance(expense['category'], str):
+            print("The category isn't a string")
+            return False
 
         if isinstance(expense['value'], bool) or not isinstance(expense['value'], (int, float)):
             print("The value isn't a float or integer")
             return False
-        
+
         elif expense['value'] < 0:
             print("The value is negative")
-            return False
-        #assert expense['value'] >= 0, "The value is negative"
-        if not isinstance(expense['category'], str):
-            print("The category isn't a string")
             return False
         try:
             
@@ -111,22 +120,23 @@ def validate_json_data(data):
 
         except ValueError as e:
             print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
+            return False
 
     try:
         
-        if not "budget" in data:
-            print("NO DATA BUDGET")
-            raise ValueError("There is no budget in the data given")
-
         
+           
+        if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, float)) :
+            raise ValueError("The budget is not a number")
+
+        if not math.isfinite(data["budget"]):
+            raise ValueError("the number is not finite")
         if  data['budget'] < 0 :
             raise ValueError("The budget can not be negative")
             
-        if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, bool)) :
-            raise ValueError("The budget is not a number")
 
-    except ValueError:
-        print("There is a problem")
+    except ValueError as e:
+        print("There is a problem", e)
         return False
  
 
