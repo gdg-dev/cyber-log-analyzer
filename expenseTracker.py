@@ -10,10 +10,6 @@ import os
 date_format = "%d/%m/%Y"
 
 
-
-
-
-
 def load_data(file_name="expenses_data.json"):
     #this function loads the data from the json file and returns it to the expenses variable
     try:
@@ -85,6 +81,11 @@ def validate_json_data(data):
     
     
     for expense in data["expenses"]:
+
+
+        strip_activity = expense['activity'].strip()
+        strip_category = expense['category'].strip()
+
         
     #assert isinstance(expense, dict), "Each expense must be a dictionary"
         if not isinstance(expense, dict):
@@ -98,15 +99,21 @@ def validate_json_data(data):
         if not isinstance(expense['activity'], str):
             print("The activity isn't a string")
             return False
-    
+        if not strip_activity:
+            print(f"the activity of {expense} is empty")
+            return False
+        
         if not isinstance(expense['category'], str):
             print("The category isn't a string")
             return False
-
+        if not strip_category:
+            print(f"The category of {expense} is empty")
+            return False
         if isinstance(expense['value'], bool) or not isinstance(expense['value'], (int, float)):
             print("The value isn't a float or integer")
             return False
-
+        elif not math.isfinite(expense['value']):
+            return False
         elif expense['value'] < 0:
             print("The value is negative")
             return False
