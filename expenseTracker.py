@@ -125,27 +125,17 @@ def validate_json_data(data):
             #assert datetime.strptime(expense['date'] , date_format), "The date is not in the correct format"
             datetime.strptime(expense['date'] , date_format)
 
+            if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, float)) :
+                raise ValueError("The budget is not a number")
+
+            if not math.isfinite(data["budget"]):
+                raise ValueError("the number is not finite")
+            if  data['budget'] < 0 :
+                raise ValueError("The budget can not be negative")
+                
         except ValueError as e:
-            print(f"Json file date error the date isn't a datetime format: {expense['date']}, {e}")
+            print(f"There is a problem: {e}")
             return False
-
-    try:
-        
-        
-           
-        if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, float)) :
-            raise ValueError("The budget is not a number")
-
-        if not math.isfinite(data["budget"]):
-            raise ValueError("the number is not finite")
-        if  data['budget'] < 0 :
-            raise ValueError("The budget can not be negative")
-            
-
-    except ValueError as e:
-        print("There is a problem", e)
-        return False
- 
 
         
     print("no problem") 
