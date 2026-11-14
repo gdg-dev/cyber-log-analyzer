@@ -66,11 +66,11 @@ def validate_json_data(data):
         print("The data structure is wrong , it isnt a dictionary")
         return False
     
-    if not "expenses" in data:
+    if "expenses" not in data:
         print("there is no expenses")
         return False
     
-    if not "budget" in data:
+    if "budget" not in data:
         print("ther is no budget in data")
         return False
     
@@ -83,62 +83,72 @@ def validate_json_data(data):
     for expense in data["expenses"]:
 
 
-        strip_activity = expense['activity'].strip()
-        strip_category = expense['category'].strip()
 
         
     #assert isinstance(expense, dict), "Each expense must be a dictionary"
         if not isinstance(expense, dict):
             print("Not a dictionary")
             return False
+        
         #assert any(key  in expense for key in required_keys), "Missing keys in expense data"
         if any(key not in expense for key in required_keys):
-            print("Missing keys in expense data")
+            print(f"Missing keys in expense data {expense}")
             return False
 
         if not isinstance(expense['activity'], str):
             print("The activity isn't a string")
             return False
+        if not isinstance(expense['category'], str):
+            print("The category isn't a string")
+            return False
+        
+        strip_activity = expense['activity'].strip()
+        strip_category = expense['category'].strip()
+
         if not strip_activity:
             print(f"the activity of {expense} is empty")
             return False
         
-        if not isinstance(expense['category'], str):
-            print("The category isn't a string")
-            return False
         if not strip_category:
             print(f"The category of {expense} is empty")
             return False
         if isinstance(expense['value'], bool) or not isinstance(expense['value'], (int, float)):
-            print("The value isn't a float or integer")
+            print(f"The value isn't a float or integer in {expense}")
             return False
-        elif not math.isfinite(expense['value']):
+        
+        elif not math.isfinite(expense['value']) :
+            print(f"The number should be finite in {expense}")
             return False
+        
         elif expense['value'] < 0:
-            print("The value is negative")
+            print(f"The value is negative in {expense}")
+            return False
+        
+        if not isinstance(expense['date'], str):
+            print(f"The date isn't a string in {expense}")
             return False
         try:
             
-            if not isinstance(expense['date'], str):
-                print("The date isn't a string")
-                return False
             #assert datetime.strptime(expense['date'] , date_format), "The date is not in the correct format"
             datetime.strptime(expense['date'] , date_format)
 
-            if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, float)) :
-                raise ValueError("The budget is not a number")
-
-            if not math.isfinite(data["budget"]):
-                raise ValueError("the number is not finite")
-            if  data['budget'] < 0 :
-                raise ValueError("The budget can not be negative")
-                
+            
         except ValueError as e:
             print(f"There is a problem: {e}")
             return False
 
-        
-    print("no problem") 
+    if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, float)) :
+        print("The budget is not a number ")
+        return False
+
+    if not math.isfinite(data["budget"]):
+        print("the number is not finite")
+        return False
+    
+    if  data['budget'] < 0 :
+        print("The budget can not be negative")
+        return False
+
     return True
 
 class InvalidDate(Exception):
