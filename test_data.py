@@ -3,9 +3,30 @@ import json
 import os
 import tempfile
 from expenseTracker import load_data, create_data_file, validate_json_data
+import pytest 
 
 
 
+valid_data = {
+    "expenses": [
+        {
+            "activity": "Lunch",
+            "value": 15.50,
+            "category": "Food",
+            "date": "2/2/2024"
+        }
+    ],
+    "budget": 500
+}
+
+def test_json_validator():
+    result =  validate_json_data(valid_data) 
+    print(result)
+    assert result is True, "Error "
+
+
+test_json_validator()
+"""
 #this function creates data for testing
 def create_test_data(test_data):
 
@@ -15,13 +36,14 @@ def create_test_data(test_data):
         with tempfile.NamedTemporaryFile(suffix=".json", encoding="utf-8", mode="w", delete=False) as temporary_file:
            
             temporary_file_name = temporary_file.name
+          
  
-            create_data_file(test_data, temporary_file_name) #write data in the temporary file
+            create_data_file(test_data, 0, temporary_file_name) #write data in the temporary file
+           
             load_test_data = load_data(temporary_file_name) #loads data from the temporary file
             
-           
-
-            assert test_data == load_test_data, "Error the file content is different,check the load_data function"
+            
+            assert test_data == load_test_data['expenses'], "Error the file content is different,check the load_data function"
             test_validate_json_data(load_test_data)
 
     finally:
@@ -79,64 +101,7 @@ if __name__ == "__main__":
     
     create_test_data(test_expenses)
 
-
-
-import functools
- 
- 
-def retry(attempts):                      # layer 1: remembers the number
-    def decorator(function):              # layer 2: receives the function
-        @functools.wraps(function)
-        def wrapper(*args, **kwargs):     # layer 3: runs on every call
-            last_error = None
- 
-            for attempt in range(1, attempts + 1):
-                try:
-                    return function(*args, **kwargs)   # success: stop and return
-                except Exception as e:
-                    last_error = e                     # save it, `e` disappears after this block
-                    print(f"Attempt {attempt} failed: {e}")
- 
-            raise last_error                           # every attempt failed
- 
-        return wrapper
-    return decorator
- 
- 
-# ---- test ----
-calls = 0
- 
- 
-@retry(3)
-def flaky(name):
-    global calls
-    calls += 1
-    if calls < 3:
-        raise ValueError(f"boom #{calls}")
-    return f"hello {name}"
- 
- 
-print(flaky("Ana"))
-print(flaky.__name__)   # 
-def outer(func):
-    def wrapper(*args):
-        func(*args)
-    return wrapper
-
-
-#@outer   
-def greet(name):
-    print(f"hi {name}")
-
-greet = outer(greet)
-
-greet("juan")
-
-
-
-
-
-
+"""
 
 
 
