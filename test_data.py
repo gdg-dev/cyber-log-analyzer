@@ -19,13 +19,38 @@ valid_data = {
     "budget": 500
 }
 
+missing_key ={
+    "expenses":[
+        {
+        "value":14,
+        }
+    ],
+    "budget":100
+
+}
+
 def test_json_validator():
     result =  validate_json_data(valid_data) 
-    print(result)
     assert result is True, "Error "
 
+def missing_keys():
+    with pytest.raises(KeyError):
+        validate_json_data(missing_key)
+missing_keys()
+def negative_expense_values():
+    pass
 
-test_json_validator()
+
+def invalid_dates():
+    pass
+
+def incorrect_data_types():
+    pass
+        
+
+
+
+#test_json_validator()
 """
 #this function creates data for testing
 def create_test_data(test_data):
