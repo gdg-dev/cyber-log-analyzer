@@ -61,7 +61,7 @@ def create_data_file(data, budget_num, file_name="expenses_data.json"):
 def validate_json_data(data):
     #this function validates the data from the json file to make sure it is correct and not missing any key
     required_keys = ["activity", "value", "category", "date"]
-
+    error_mesages_total = [{"Budget errors": []}]
     if not isinstance(data, dict):
         print("The data structure is wrong , it isnt a dictionary")
         return False
@@ -80,75 +80,110 @@ def validate_json_data(data):
         return False
     
     
-    for expense in data["expenses"]:
+    for index, expense in enumerate(data["expenses"], start=1):
+        expense_error = {"expense":index, "errors":[]}
+        
 
 
 
         
     #assert isinstance(expense, dict), "Each expense must be a dictionary"
-        if not isinstance(expense, dict):
+        if not isinstance(expense, dict): 
             print("Not a dictionary")
             return False
         
         #assert any(key  in expense for key in required_keys), "Missing keys in expense data"
-        if any(key not in expense for key in required_keys):
-            print(f"Missing keys in expense data {expense}")
-            return False
+        for key in required_keys:
+            if key not in expense.keys():
+                expense_error["errors"].append(f" Missing {key}")
 
-        if not isinstance(expense['activity'], str):
-            print("The activity isn't a string")
-            return False
-        if not isinstance(expense['category'], str):
-            print("The category isn't a string")
-            return False
-        
-        strip_activity = expense['activity'].strip()
-        strip_category = expense['category'].strip()
-
-        if not strip_activity:
-            print(f"the activity of {expense} is empty")
-            return False
-        
-        if not strip_category:
-            print(f"The category of {expense} is empty")
-            return False
-        if isinstance(expense['value'], bool) or not isinstance(expense['value'], (int, float)):
-            print(f"The value isn't a float or integer in {expense}")
-            return False
-        
-        elif not math.isfinite(expense['value']) :
-            print(f"The number should be finite in {expense}")
-            return False
-        
-        elif expense['value'] < 0:
-            print(f"The value is negative in {expense}")
-            return False
-        
-        if not isinstance(expense['date'], str):
-            print(f"The date isn't a string in {expense}")
-            return False
         try:
             
-            #assert datetime.strptime(expense['date'] , date_format), "The date is not in the correct format"
-            datetime.strptime(expense['date'] , date_format)
+            if not isinstance(expense['activity'], str):
+                expense_error["errors"].append("The activity isn't a string")
+            else:
+                strip_activity = expense['activity'].strip()
 
+                if not strip_activity:
+                    expense_error["errors"].append("The activity is empty")
+
+        except KeyError:
+            pass
+
+        try:
+            if not isinstance(expense['category'], str):
+                expense_error["errors"].append("The category isn't a string")
+
+            else:
+                strip_category  = expense['category'].strip()
+
+                if not strip_category:
+                    expense_error["errors"].append("The category is empty")
+
+        except KeyError:
+            pass
+        
+
+        
+        try:
+
+            if isinstance(expense['value'], bool) or not isinstance(expense['value'], (int, float)):
+                expense_error["errors"].append("the value isn't a float or integer")
             
-        except ValueError as e:
-            print(f"There is a problem: {e}")
-            return False
+            elif not math.isfinite(expense['value']) :
+                expense_error["errors"].append("The value number is not finite")
+            
+            elif expense['value'] < 0:
+                expense_error["errors"].append("The value cannot be negative")
+        except KeyError:
+            pass
 
-    if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, float)) :
-        print("The budget is not a number ")
-        return False
+        try:
+            if not isinstance(expense['date'], str):
+                expense_error["errors"].append("The date is not a string")
 
-    if not math.isfinite(data["budget"]):
-        print("the number is not finite")
-        return False
+            try:
+                        
+                #assert datetime.strptime(expense['date'] , date_format), "The date is not in the correct format"
+                datetime.strptime(expense['date'] , date_format)
     
-    if  data['budget'] < 0 :
-        print("The budget can not be negative")
+                
+            except ValueError:
+                expense_error["errors"].append("The date is not correct")
+
+        except KeyError:
+            pass
+        
+
+        finally:
+            if len(expense_error["errors"]) >= 1:
+                error_mesages_total.append(expense_error)
+           
+           
+            
+
+    try:
+
+        if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, float)) :
+            error_mesages_total[0]["Budget errors"].append("The Budget is not a number")
+        
+        elif not math.isfinite(data["budget"]):
+            error_mesages_total[0]["Budget errors"].append("The Budget is not finite")
+        
+        elif  data['budget'] < 0 :
+            error_mesages_total[0]["Budget errors"].append("The Budget cannot be negative")
+
+    except KeyError:
+        pass
+
+    if error_mesages_total[1]:
+
+        for i in error_mesages_total:
+            print(i)
+
         return False
 
+        
     return True
 
 class InvalidDate(Exception):
