@@ -1,3 +1,5 @@
+
+
 """
 #class stuctur
 class LogEntery:

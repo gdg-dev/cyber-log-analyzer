@@ -61,7 +61,8 @@ def create_data_file(data, budget_num, file_name="expenses_data.json"):
 def validate_json_data(data):
     #this function validates the data from the json file to make sure it is correct and not missing any key
     required_keys = ["activity", "value", "category", "date"]
-    error_mesages_total = [{"Budget errors": []}]
+    error_mesages_total = {"Budget": {"Budget errors": []}, "Expenses":{"Expense errors": []}}
+
     if not isinstance(data, dict):
         print("The data structure is wrong , it isnt a dictionary")
         return False
@@ -87,16 +88,16 @@ def validate_json_data(data):
 
 
         
-    #assert isinstance(expense, dict), "Each expense must be a dictionary"
+        #assert isinstance(expense, dict), "Each expense must be a dictionary"
         if not isinstance(expense, dict): 
             print("Not a dictionary")
             return False
         
         #assert any(key  in expense for key in required_keys), "Missing keys in expense data"
         for key in required_keys:
-            if key not in expense.keys():
+            if key not in expense:
                 expense_error["errors"].append(f" Missing {key}")
-
+        
         try:
             
             if not isinstance(expense['activity'], str):
@@ -135,51 +136,59 @@ def validate_json_data(data):
             
             elif expense['value'] < 0:
                 expense_error["errors"].append("The value cannot be negative")
+
         except KeyError:
             pass
 
         try:
             if not isinstance(expense['date'], str):
                 expense_error["errors"].append("The date is not a string")
+                
 
-            try:
-                        
+            
+            else:       
                 #assert datetime.strptime(expense['date'] , date_format), "The date is not in the correct format"
                 datetime.strptime(expense['date'] , date_format)
-    
                 
-            except ValueError:
-                expense_error["errors"].append("The date is not correct")
+
+                
+          
 
         except KeyError:
             pass
+
+        except ValueError:
+            expense_error["errors"].append("The date is not correct")
+
         
 
-        finally:
-            if len(expense_error["errors"]) >= 1:
-                error_mesages_total.append(expense_error)
-           
-           
+        
+        if expense_error["errors"]:
+            error_mesages_total["Expenses"]["Expense errors"].append(expense_error)
+        
+        
             
 
     try:
 
         if isinstance(data['budget'], bool) or not isinstance(data['budget'], (int, float)) :
-            error_mesages_total[0]["Budget errors"].append("The Budget is not a number")
+            error_mesages_total["Budget"]["Budget errors"].append("The Budget is not a number")
         
         elif not math.isfinite(data["budget"]):
-            error_mesages_total[0]["Budget errors"].append("The Budget is not finite")
+            error_mesages_total["Budget"]["Budget errors"].append("The Budget is not finite")
         
         elif  data['budget'] < 0 :
-            error_mesages_total[0]["Budget errors"].append("The Budget cannot be negative")
+            error_mesages_total["Budget"]["Budget errors"].append("The Budget cannot be negative")
 
     except KeyError:
         pass
 
-    if error_mesages_total[1]:
-
+    if error_mesages_total["Budget"]["Budget errors"] or error_mesages_total["Expenses"]["Expense errors"]:
+        
         for i in error_mesages_total:
-            print(i)
+            #for error in i:
+            for errors in error_mesages_total[i].values():
+                print(errors)
 
         return False
 
