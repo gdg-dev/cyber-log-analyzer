@@ -5,52 +5,70 @@ import copy
 
 
 
-data = {
+
+@pytest.fixture
+def sample_data():
+    return {
     "expenses": [
           {
         "activity": "swim",
         "value": 23,
         "category": "entertainment",
         "date": "2/8/2024"
-    }],
-    "budget":100
-}
+    }
+    ],
+    "budget":100}
+ 
 
 
 
 
 
-def test_json_validator():
+
+def test_json_validator(sample_data):
    
-    assert validate_json_data(data) is True
+    assert validate_json_data(sample_data) is True
 
-def test_missing_keys():
+def test_missing_keys(sample_data):
     
-    changed_dict = copy.deepcopy(data)
-    del changed_dict["expenses"][0]["activity"]
-    assert validate_json_data(changed_dict) is False
+   
+    del sample_data["expenses"][0]["activity"]
+    assert validate_json_data(sample_data) is False
 
 
 
-def test_negative_expense_values():
-    changed_dict = copy.deepcopy(data)
-    changed_dict["expenses"][0]["value"] = -10
-    assert validate_json_data(changed_dict) is False
+def test_negative_expense_values(sample_data):
+   
+    sample_data["expenses"][0]["value"] = -10
+    assert validate_json_data(sample_data) is False
 
 
-def test_invalid_dates():
-    changed_dict = copy.deepcopy(data)
-    changed_dict["expenses"][0]["date"] = 20
-    assert validate_json_data(changed_dict) is False
+def test_invalid_dates(sample_data):
+   
+    sample_data["expenses"][0]["date"] = 20
+    assert validate_json_data(sample_data) is False
 
-def test_incorrect_data_types():
-    changed_dict = copy.deepcopy(data)
-    changed_dict["expenses"][0]["activity"] = 20
-    assert validate_json_data(changed_dict) is False
+def test_incorrect_data_types(sample_data):
+
+    sample_data["expenses"][0]["activity"] = 20
+    assert validate_json_data(sample_data) is False
         
+def test_empty_string_activity(sample_data):
+    sample_data["expenses"][0]["activity"] = ""
+    assert validate_json_data(sample_data) is False
+
+def test_negative_budget(sample_data):
+    
+    sample_data["budget"] = -100
+    assert validate_json_data(sample_data) is False
 
 
-def test_negative_budget():
-    changed_dict = copy.deepcopy(data)
-    changed_dict["budget"] = -100
-    assert validate_json_data(changed_dict) is False
+def test_nan_expense_value(sample_data):
+   
+    sample_data["expenses"][0]["value"] = float("nan")
+    assert validate_json_data(sample_data) is False
+
+
+def test_invalid_date_format(sample_data):
+    sample_data["expenses"][0]["date"] = "not a date"
+    assert validate_json_data(sample_data) is False
