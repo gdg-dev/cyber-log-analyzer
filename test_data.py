@@ -6,7 +6,7 @@ import copy
 
 
 
-@pytest.fixture
+@pytest.fixture()
 def sample_data():
     return {
     "expenses": [
@@ -72,3 +72,27 @@ def test_nan_expense_value(sample_data):
 def test_invalid_date_format(sample_data):
     sample_data["expenses"][0]["date"] = "not a date"
     assert validate_json_data(sample_data) is False
+
+def test_expense_value_of_0(sample_data):
+    sample_data["expenses"][0]["value"] = 0
+    assert validate_json_data(sample_data) is False
+
+def test_budget_of_0(sample_data):
+    sample_data["budget"] = 0
+    assert validate_json_data(sample_data) is True
+
+
+def test_empty_expenses(sample_data):
+    sample_data["expenses"][0] = []
+    assert validate_json_data(sample_data) is False
+
+
+def test_activity_with_just_spaces(sample_data):
+    sample_data["expenses"][0]["activity"] = "   "
+    assert validate_json_data(sample_data) is False
+
+
+
+
+
+

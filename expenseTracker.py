@@ -134,7 +134,7 @@ def validate_json_data(data):
             elif not math.isfinite(expense['value']) :
                 expense_error["errors"].append("The value number is not finite")
             
-            elif expense['value'] < 0:
+            elif expense['value'] <= 0:
                 expense_error["errors"].append("The value cannot be negative")
 
         except KeyError:
